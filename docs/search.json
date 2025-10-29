@@ -1,19 +1,5 @@
 [
   {
-    "objectID": "intro.html",
-    "href": "intro.html",
-    "title": "Introduction to Deep Learning",
-    "section": "",
-    "text": "Deep learning is…\n\n\n\n\n\n\n\n\n\n\n\nAdvantages\nDisadvantages\n\n\n\n\nCan produce more accurate results\nRequires A LOT of training data"
-  },
-  {
-    "objectID": "intro.html#what-is-deep-learning",
-    "href": "intro.html#what-is-deep-learning",
-    "title": "Introduction to Deep Learning",
-    "section": "",
-    "text": "Deep learning is…\n\n\n\n\n\n\n\n\n\n\n\nAdvantages\nDisadvantages\n\n\n\n\nCan produce more accurate results\nRequires A LOT of training data"
-  },
-  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Deep Learning for Forest Inventories",
@@ -40,5 +26,19 @@
     "title": "Deep Learning for Forest Inventories",
     "section": "Instructors",
     "text": "Instructors\n\n\n\nName\nAffiliation\n\n\n\n\nBrent A. Murray\nIntegrated Remote Sensing Studio, University of British Columbia\n\n\nHarry Seely\nIntegrated Remote Sensing Studio, University of British Columbia\n\n\nYuwei Cao\nIntegrated Remote Sensing Studio, University of British Columbia"
+  },
+  {
+    "objectID": "01_intro.html",
+    "href": "01_intro.html",
+    "title": "Introduction to Deep Learning",
+    "section": "",
+    "text": "Deep learning is…\n\n\n\n\n\n\n\n\n\n\n\nAdvantages\nDisadvantages\n\n\n\n\nCan produce more accurate results\nRequires A LOT of training data"
+  },
+  {
+    "objectID": "01_intro.html#what-is-deep-learning",
+    "href": "01_intro.html#what-is-deep-learning",
+    "title": "Introduction to Deep Learning",
+    "section": "",
+    "text": "Deep learning is…\n\n\n\n\n\n\n\n\n\n\n\nAdvantages\nDisadvantages\n\n\n\n\nCan produce more accurate results\nRequires A LOT of training data"
   }
 ]

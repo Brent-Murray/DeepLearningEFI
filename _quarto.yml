@@ -12,8 +12,8 @@ website:
     left:
       - text: Home
         href: index.qmd
-      - text: Intro
-        href: intro.qmd
+      - text: 1-Intro
+        href: 01_intro.qmd
 
 format:
   html:
