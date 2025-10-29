@@ -1,0 +1,40 @@
+---
+title: "Deep Learning for Forest Inventories"
+subtitle: "Hands-on workshop"
+author:
+  - name: "Brent A. Murray"
+    affiliation: "University of British Columbia – Integrated Remote Sensing Studio"
+  - name: "Harry Seely"
+    affiliation: "University of British Columbia – Integrated Remote Sensing Studio"
+  - name: "Yuwei Cao"
+    affiliation: "University of British Columbia – Integrated Remote Sensing Studio"
+format:
+  html:
+    toc: True
+---
+
+::: {.hero}
+# Deep Learning for Enhanced Forest Inventories
+An introductory workshop for deep learning techniques for Enhanced Forest Inventories (EFIs) presented at the Canadain Cross-Country EFI Checkup. 
+
+[Get Started](setup.qmd){.btn .btn-primary} [View Schedule](schedule.qmd){.btn .btn-outline-primary}
+:::
+
+## Overview
+This workshop covers a basic end-to-end deep learning workflow for EFI applications, covering an introduction into deep learning, to data prepartation, and finally a demo of model training, evaluation, and deployment. There will also be some examples of real world forest inventory deep learning applications showcasing some of the possibilities there are with these techniques.
+
+### You will learn
+- What deep learning is and how it can be used for EFIs.
+- Data pipelines for remote sensing inputs.
+- Deep learning based feature extraction for inventory attribute classification.
+
+## Prerequisites
+- Comfortable with Python and Jupyter notebooks.
+- Google Colab will be used for running the live demo.
+
+## Instructors
+| Name | Affiliation |
+|---|---|
+| [Brent A. Murray](https://www.researchgate.net/profile/Brent-Murray-4) | Integrated Remote Sensing Studio, University of British Columbia |
+| [Harry Seely](https://www.researchgate.net/profile/Harry-Seely) | Integrated Remote Sensing Studio, University of British Columbia |
+| [Yuwei Cao]() | Integrated Remote Sensing Studio, University of British Columbia |

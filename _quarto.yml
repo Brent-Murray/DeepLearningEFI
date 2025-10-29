@@ -1,0 +1,29 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Deep Learning for Forest Inventories"
+  description: "Workshop on deep learning applications for enhanced forest inventories"
+  site-url: https://Brent-Murray.github.io/DeepLearningEFI/
+  repo-url: https://github.com/Brent-Murray/DeepLearningEFI
+  repo-actions: [issue, edit]
+  navbar:
+    left:
+      - text: Home
+        href: index.qmd
+      - text: Intro
+        href: intro.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    page-layout: full
+
+execute:
+  freeze: auto
+  echo: false
+  warning: false
+  error: false
+  cache: true

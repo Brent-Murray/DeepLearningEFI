@@ -1,0 +1,44 @@
+[
+  {
+    "objectID": "intro.html",
+    "href": "intro.html",
+    "title": "Introduction to Deep Learning",
+    "section": "",
+    "text": "Deep learning is…\n\n\n\n\n\n\n\n\n\n\n\nAdvantages\nDisadvantages\n\n\n\n\nCan produce more accurate results\nRequires A LOT of training data"
+  },
+  {
+    "objectID": "intro.html#what-is-deep-learning",
+    "href": "intro.html#what-is-deep-learning",
+    "title": "Introduction to Deep Learning",
+    "section": "",
+    "text": "Deep learning is…\n\n\n\n\n\n\n\n\n\n\n\nAdvantages\nDisadvantages\n\n\n\n\nCan produce more accurate results\nRequires A LOT of training data"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Deep Learning for Forest Inventories",
+    "section": "",
+    "text": "An introductory workshop for deep learning techniques for Enhanced Forest Inventories (EFIs) presented at the Canadain Cross-Country EFI Checkup.\nGet Started View Schedule"
+  },
+  {
+    "objectID": "index.html#overview",
+    "href": "index.html#overview",
+    "title": "Deep Learning for Forest Inventories",
+    "section": "Overview",
+    "text": "Overview\nThis workshop covers a basic end-to-end deep learning workflow for EFI applications, covering an introduction into deep learning, to data prepartation, and finally a demo of model training, evaluation, and deployment. There will also be some examples of real world forest inventory deep learning applications showcasing some of the possibilities there are with these techniques.\n\nYou will learn\n\nWhat deep learning is and how it can be used for EFIs.\nData pipelines for remote sensing inputs.\nDeep learning based feature extraction for inventory attribute classification."
+  },
+  {
+    "objectID": "index.html#prerequisites",
+    "href": "index.html#prerequisites",
+    "title": "Deep Learning for Forest Inventories",
+    "section": "Prerequisites",
+    "text": "Prerequisites\n\nComfortable with Python and Jupyter notebooks.\nGoogle Colab will be used for running the live demo."
+  },
+  {
+    "objectID": "index.html#instructors",
+    "href": "index.html#instructors",
+    "title": "Deep Learning for Forest Inventories",
+    "section": "Instructors",
+    "text": "Instructors\n\n\n\nName\nAffiliation\n\n\n\n\nBrent A. Murray\nIntegrated Remote Sensing Studio, University of British Columbia\n\n\nHarry Seely\nIntegrated Remote Sensing Studio, University of British Columbia\n\n\nYuwei Cao\nIntegrated Remote Sensing Studio, University of British Columbia"
+  }
+]
