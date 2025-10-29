@@ -15,7 +15,7 @@ format:
 
 ::: {.hero}
 # Deep Learning for Enhanced Forest Inventories
-An introductory workshop for deep learning techniques for Enhanced Forest Inventories (EFIs) presented at the Canadain Cross-Country EFI Checkup. 
+An introductory workshop for deep learning techniques for Enhanced Forest Inventories (EFIs) presented at the Canadian Cross-Country EFI Checkup. 
 
 [Get Started](setup.qmd){.btn .btn-primary} [View Schedule](schedule.qmd){.btn .btn-outline-primary}
 :::
