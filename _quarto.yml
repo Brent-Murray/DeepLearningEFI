@@ -14,6 +14,10 @@ website:
         href: index.qmd
       - text: 1-Intro
         href: 01_intro.qmd
+      - text: 2-Data
+        href: 02_data.qmd
+      - text: 3-Train
+        href: 03_train.qmd
 
 format:
   html:

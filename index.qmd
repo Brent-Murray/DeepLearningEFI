@@ -8,6 +8,8 @@ author:
     affiliation: "University of British Columbia – Integrated Remote Sensing Studio"
   - name: "Yuwei Cao"
     affiliation: "University of British Columbia – Integrated Remote Sensing Studio"
+  - name: "Ahmed Ragab"
+    affiliation: "Natural Resources Canada - CanmetENERGY;<br>Polytechnique Montreal - Department of Mathematics and Industrial Engineering"
 format:
   html:
     toc: True
@@ -25,8 +27,11 @@ This workshop covers a basic end-to-end deep learning workflow for EFI applicati
 
 ### You will learn
 - What deep learning is and how it can be used for EFIs.
-- Data pipelines for remote sensing inputs.
-- Deep learning based feature extraction for inventory attribute classification.
+- How to prepare and read in data for use in deep learning.
+- Basics of using the <a href="https://pytorch.org/" target="_blank">PyTorch</a> deep learning library.
+- Deep learning based forest attribute feature extraction.
+- Training a deep learning model for classification tasks.
+- Validation and testing of deep learning models.
 
 ## Prerequisites
 - Comfortable with Python and Jupyter notebooks.
@@ -35,6 +40,6 @@ This workshop covers a basic end-to-end deep learning workflow for EFI applicati
 ## Instructors
 | Name | Affiliation |
 |---|---|
-| [Brent A. Murray](https://www.researchgate.net/profile/Brent-Murray-4) | Integrated Remote Sensing Studio, University of British Columbia |
-| [Harry Seely](https://www.researchgate.net/profile/Harry-Seely) | Integrated Remote Sensing Studio, University of British Columbia |
-| [Yuwei Cao]() | Integrated Remote Sensing Studio, University of British Columbia |
+| <a href="https://www.researchgate.net/profile/Brent-Murray-4" target="_blank">Brent A. Murray</a> | Integrated Remote Sensing Studio. University of British Columbia |
+| <a href="https://www.researchgate.net/profile/Harry-Seely" target="_blank">Harry Seely</a> | Integrated Remote Sensing Studio. University of British Columbia |
+| <a href="https://irsslab.forestry.ubc.ca/people/post-doctoral-fellows/" target="_blank">Yuwei Cao</a> | Integrated Remote Sensing Studio. University of British Columbia |

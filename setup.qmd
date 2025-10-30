@@ -1,0 +1,9 @@
+---
+title: "Setup"
+format:
+  html:
+    toc: True
+---
+## Data Downloads
+
+## Google Colab Setup

@@ -7,5 +7,20 @@
   },
   "01_intro.qmd": {
     "01_intro.html": "8c068403"
+  },
+  "schedule.qmd": {
+    "schedule.html": "7feaac6e"
+  },
+  "setup.qmd": {
+    "setup.html": "1c4c2e98"
+  },
+  "02_data-Copy1.qmd": {
+    "02_data-Copy1.html": "0546fbd3"
+  },
+  "02_data.qmd": {
+    "02_data.html": "817bb108"
+  },
+  "03_train.qmd": {
+    "03_train.html": "6a694ffa"
   }
 }

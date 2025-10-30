@@ -1,0 +1,12 @@
+---
+title: "Data Preparation and Loading"
+format:
+  html:
+    toc: True
+---
+
+## Data Preparation for Use in Deep Learning
+
+## Loading Data in PyTorch
+
+

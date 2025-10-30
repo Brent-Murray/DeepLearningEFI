@@ -1,5 +1,12 @@
 [
   {
+    "objectID": "setup.html#google-colab-setup",
+    "href": "setup.html#google-colab-setup",
+    "title": "Setup",
+    "section": "Google Colab Setup",
+    "text": "Google Colab Setup"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Deep Learning for Forest Inventories",
@@ -11,7 +18,7 @@
     "href": "index.html#overview",
     "title": "Deep Learning for Forest Inventories",
     "section": "Overview",
-    "text": "Overview\nThis workshop covers a basic end-to-end deep learning workflow for EFI applications, covering an introduction into deep learning, to data prepartation, and finally a demo of model training, evaluation, and deployment. There will also be some examples of real world forest inventory deep learning applications showcasing some of the possibilities there are with these techniques.\n\nYou will learn\n\nWhat deep learning is and how it can be used for EFIs.\nData pipelines for remote sensing inputs.\nDeep learning based feature extraction for inventory attribute classification."
+    "text": "Overview\nThis workshop covers a basic end-to-end deep learning workflow for EFI applications, covering an introduction into deep learning, to data prepartation, and finally a demo of model training, evaluation, and deployment. There will also be some examples of real world forest inventory deep learning applications showcasing some of the possibilities there are with these techniques.\n\nYou will learn\n\nWhat deep learning is and how it can be used for EFIs.\nHow to prepare and read in data for use in deep learning.\nBasics of using the PyTorch deep learning library.\nDeep learning based forest attribute feature extraction.\nTraining a deep learning model for classification tasks.\nValidation and testing of deep learning models."
   },
   {
     "objectID": "index.html#prerequisites",
@@ -25,7 +32,14 @@
     "href": "index.html#instructors",
     "title": "Deep Learning for Forest Inventories",
     "section": "Instructors",
-    "text": "Instructors\n\n\n\nName\nAffiliation\n\n\n\n\nBrent A. Murray\nIntegrated Remote Sensing Studio, University of British Columbia\n\n\nHarry Seely\nIntegrated Remote Sensing Studio, University of British Columbia\n\n\nYuwei Cao\nIntegrated Remote Sensing Studio, University of British Columbia"
+    "text": "Instructors\n\n\n\n\n\n\n\nName\nAffiliation\n\n\n\n\nBrent A. Murray\nIntegrated Remote Sensing Studio. University of British Columbia\n\n\nHarry Seely\nIntegrated Remote Sensing Studio. University of British Columbia\n\n\nYuwei Cao\nIntegrated Remote Sensing Studio. University of British Columbia"
+  },
+  {
+    "objectID": "02_data.html#loading-data-in-pytorch",
+    "href": "02_data.html#loading-data-in-pytorch",
+    "title": "Data Preparation and Loading",
+    "section": "Loading Data in PyTorch",
+    "text": "Loading Data in PyTorch"
   },
   {
     "objectID": "01_intro.html",
@@ -40,5 +54,19 @@
     "title": "Introduction to Deep Learning",
     "section": "",
     "text": "Deep learning is…\n\n\n\n\n\n\n\n\n\n\n\nAdvantages\nDisadvantages\n\n\n\n\nCan produce more accurate results\nRequires A LOT of training data"
+  },
+  {
+    "objectID": "schedule.html",
+    "href": "schedule.html",
+    "title": "Schedule",
+    "section": "",
+    "text": "Time\nTopic\nMaterials\n\n\n\n\n09:00–09:10\nWelcome & Introductions\nHome\n\n\n09:10–09:40\nIntroduction to Deep Learning\n1-Intro\n\n\n09:40–10:15\nData Preparation and Loading\n2-Data\n\n\n10:15–10:30\nBreak\n\n\n\n10:30–11:15\nData Preparation and Loading\n3-Train"
+  },
+  {
+    "objectID": "schedule.html#agenda",
+    "href": "schedule.html#agenda",
+    "title": "Schedule",
+    "section": "",
+    "text": "Time\nTopic\nMaterials\n\n\n\n\n09:00–09:10\nWelcome & Introductions\nHome\n\n\n09:10–09:40\nIntroduction to Deep Learning\n1-Intro\n\n\n09:40–10:15\nData Preparation and Loading\n2-Data\n\n\n10:15–10:30\nBreak\n\n\n\n10:30–11:15\nData Preparation and Loading\n3-Train"
   }
 ]
