@@ -22,5 +22,11 @@
   },
   "03_train.qmd": {
     "03_train.html": "6a694ffa"
+  },
+  "04_validation.qmd": {
+    "04_validation.html": "e2b0dc3d"
+  },
+  "05_examples.qmd": {
+    "05_examples.html": "92fe5722"
   }
 }

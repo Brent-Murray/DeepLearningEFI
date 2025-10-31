@@ -4,6 +4,7 @@ format:
   html:
     toc: True
 ---
+## Relevant Resources
 
 ## Data Preparation for Use in Deep Learning
 

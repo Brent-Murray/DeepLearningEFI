@@ -4,7 +4,12 @@ format:
   html:
     toc: True
 ---
+## Relevant Resources
 
 ## Training Deep Learning Models in PyTorch
+
+### Optimizers
+
+### Loss Functions
 
 

@@ -10,5 +10,8 @@ format:
 | 09:00–09:10 | Welcome & Introductions | [Home](index.qmd) |
 | 09:10–09:40 | Introduction to Deep Learning | [1-Intro](01_intro.qmd) |
 | 09:40–10:15 | Data Preparation and Loading | [2-Data](02_data.qmd) |
-| 10:15–10:30 | Break | |
-| 10:30–11:15 | Data Preparation and Loading | [3-Train](03_train.qmd) |
+| 10:15–10:30 | Break | NA |
+| 10:30–11:00 | Training Deep Learning Models | [3-Train](03_train.qmd) 
+| 11:00–11:20 | Validating Deep Learning Models | [4-Validation](04_validation.qmd) |
+| 11:20–11:50 | Examples of Deep Learning Forest Inventory Products | [5-Examples](05_examples.qmd) |
+| 11:50–12:00 | Question & Answer | NA |

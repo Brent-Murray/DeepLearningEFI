@@ -4,11 +4,13 @@ format:
   html:
     toc: True
 ---
+## Relevant Resources
 
 ## What is Deep Learning?
 Deep learning is...
 
-### How does deep learning differ from machine learning or artifical intelegence
+## Frequently Asked Questions
+### How does deep learning differ from machine learning or artifical intelligence?
 
 ### What makes deep learning deep?
 
@@ -16,5 +18,9 @@ Deep learning is...
 | Advantages | Disadvantages |
 |---|---|
 | Can produce more accurate results | Requires A LOT of training data |
+
+### When should a deep learning model be used?
+
+### What computing resources are required to run a deep learning model?
 
 

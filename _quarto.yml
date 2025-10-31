@@ -7,7 +7,7 @@ website:
   description: "Workshop on deep learning applications for enhanced forest inventories"
   site-url: https://Brent-Murray.github.io/DeepLearningEFI/
   repo-url: https://github.com/Brent-Murray/DeepLearningEFI
-  repo-actions: [issue, edit]
+  repo-actions: [issue]
   navbar:
     left:
       - text: Home
@@ -18,6 +18,10 @@ website:
         href: 02_data.qmd
       - text: 3-Train
         href: 03_train.qmd
+      - text: 4-Validation
+        href: 04_validation.qmd
+      - text: 5-Examples
+        href: 05_examples.qmd
 
 format:
   html:

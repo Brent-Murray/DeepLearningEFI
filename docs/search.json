@@ -35,6 +35,27 @@
     "text": "Instructors\n\n\n\n\n\n\n\nName\nAffiliation\n\n\n\n\nBrent A. Murray\nIntegrated Remote Sensing Studio. University of British Columbia\n\n\nHarry Seely\nIntegrated Remote Sensing Studio. University of British Columbia\n\n\nYuwei Cao\nIntegrated Remote Sensing Studio. University of British Columbia"
   },
   {
+    "objectID": "04_validation.html#validating-deep-learning-predictions",
+    "href": "04_validation.html#validating-deep-learning-predictions",
+    "title": "Validation of Deep Learning Derived Forest Inventory Predictions",
+    "section": "Validating Deep Learning Predictions",
+    "text": "Validating Deep Learning Predictions"
+  },
+  {
+    "objectID": "04_validation.html#examples-of-evaluation-metrics-and-plotting-figures",
+    "href": "04_validation.html#examples-of-evaluation-metrics-and-plotting-figures",
+    "title": "Validation of Deep Learning Derived Forest Inventory Predictions",
+    "section": "Examples of Evaluation Metrics and Plotting Figures",
+    "text": "Examples of Evaluation Metrics and Plotting Figures"
+  },
+  {
+    "objectID": "02_data.html#data-preparation-for-use-in-deep-learning",
+    "href": "02_data.html#data-preparation-for-use-in-deep-learning",
+    "title": "Data Preparation and Loading",
+    "section": "Data Preparation for Use in Deep Learning",
+    "text": "Data Preparation for Use in Deep Learning"
+  },
+  {
     "objectID": "02_data.html#loading-data-in-pytorch",
     "href": "02_data.html#loading-data-in-pytorch",
     "title": "Data Preparation and Loading",
@@ -42,31 +63,52 @@
     "text": "Loading Data in PyTorch"
   },
   {
-    "objectID": "01_intro.html",
-    "href": "01_intro.html",
-    "title": "Introduction to Deep Learning",
-    "section": "",
-    "text": "Deep learning is…\n\n\n\n\n\n\n\n\n\n\n\nAdvantages\nDisadvantages\n\n\n\n\nCan produce more accurate results\nRequires A LOT of training data"
-  },
-  {
     "objectID": "01_intro.html#what-is-deep-learning",
     "href": "01_intro.html#what-is-deep-learning",
     "title": "Introduction to Deep Learning",
-    "section": "",
-    "text": "Deep learning is…\n\n\n\n\n\n\n\n\n\n\n\nAdvantages\nDisadvantages\n\n\n\n\nCan produce more accurate results\nRequires A LOT of training data"
+    "section": "What is Deep Learning?",
+    "text": "What is Deep Learning?\nDeep learning is…"
+  },
+  {
+    "objectID": "01_intro.html#frequently-asked-questions",
+    "href": "01_intro.html#frequently-asked-questions",
+    "title": "Introduction to Deep Learning",
+    "section": "Frequently Asked Questions",
+    "text": "Frequently Asked Questions\n\nHow does deep learning differ from machine learning or artifical intelligence?\n\n\nWhat makes deep learning deep?\n\n\nWhat are some advantages and disadvantages of deep learning?\n\n\n\nAdvantages\nDisadvantages\n\n\n\n\nCan produce more accurate results\nRequires A LOT of training data\n\n\n\n\n\nWhen should a deep learning model be used?\n\n\nWhat computing resources are required to run a deep learning model?"
+  },
+  {
+    "objectID": "03_train.html#training-deep-learning-models-in-pytorch",
+    "href": "03_train.html#training-deep-learning-models-in-pytorch",
+    "title": "Training Deep Learning Models",
+    "section": "Training Deep Learning Models in PyTorch",
+    "text": "Training Deep Learning Models in PyTorch\n\nOptimizers\n\n\nLoss Functions"
+  },
+  {
+    "objectID": "05_examples.html#tree-species-composition",
+    "href": "05_examples.html#tree-species-composition",
+    "title": "Examples of Deep Learning Forest Inventory Products",
+    "section": "Tree Species Composition",
+    "text": "Tree Species Composition"
+  },
+  {
+    "objectID": "05_examples.html#individual-tree-species",
+    "href": "05_examples.html#individual-tree-species",
+    "title": "Examples of Deep Learning Forest Inventory Products",
+    "section": "Individual Tree Species",
+    "text": "Individual Tree Species"
   },
   {
     "objectID": "schedule.html",
     "href": "schedule.html",
     "title": "Schedule",
     "section": "",
-    "text": "Time\nTopic\nMaterials\n\n\n\n\n09:00–09:10\nWelcome & Introductions\nHome\n\n\n09:10–09:40\nIntroduction to Deep Learning\n1-Intro\n\n\n09:40–10:15\nData Preparation and Loading\n2-Data\n\n\n10:15–10:30\nBreak\n\n\n\n10:30–11:15\nData Preparation and Loading\n3-Train"
+    "text": "Time\nTopic\nMaterials\n\n\n\n\n09:00–09:10\nWelcome & Introductions\nHome\n\n\n09:10–09:40\nIntroduction to Deep Learning\n1-Intro\n\n\n09:40–10:15\nData Preparation and Loading\n2-Data\n\n\n10:15–10:30\nBreak\nNA\n\n\n10:30–11:00\nTraining Deep Learning Models\n3-Train\n\n\n11:00–11:20\nValidating Deep Learning Models\n4-Validation\n\n\n11:20–11:50\nExamples of Deep Learning Forest Inventory Products\n5-Examples\n\n\n11:50–12:00\nQuestion & Answer\nNA"
   },
   {
     "objectID": "schedule.html#agenda",
     "href": "schedule.html#agenda",
     "title": "Schedule",
     "section": "",
-    "text": "Time\nTopic\nMaterials\n\n\n\n\n09:00–09:10\nWelcome & Introductions\nHome\n\n\n09:10–09:40\nIntroduction to Deep Learning\n1-Intro\n\n\n09:40–10:15\nData Preparation and Loading\n2-Data\n\n\n10:15–10:30\nBreak\n\n\n\n10:30–11:15\nData Preparation and Loading\n3-Train"
+    "text": "Time\nTopic\nMaterials\n\n\n\n\n09:00–09:10\nWelcome & Introductions\nHome\n\n\n09:10–09:40\nIntroduction to Deep Learning\n1-Intro\n\n\n09:40–10:15\nData Preparation and Loading\n2-Data\n\n\n10:15–10:30\nBreak\nNA\n\n\n10:30–11:00\nTraining Deep Learning Models\n3-Train\n\n\n11:00–11:20\nValidating Deep Learning Models\n4-Validation\n\n\n11:20–11:50\nExamples of Deep Learning Forest Inventory Products\n5-Examples\n\n\n11:50–12:00\nQuestion & Answer\nNA"
   }
 ]
