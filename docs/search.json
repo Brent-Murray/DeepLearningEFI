@@ -60,7 +60,7 @@
     "href": "02_data.html#loading-data-in-pytorch",
     "title": "Data Preparation and Loading",
     "section": "Loading Data in PyTorch",
-    "text": "Loading Data in PyTorch"
+    "text": "Loading Data in PyTorch\n\n\n\n\n\n\n\n\nFigure 1: Visualize plots\n\n\n\n\n\n\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nx = np.linspace(0, 2*np.pi, 200)\ny = np.sin(x)\n\nplt.plot(x, y)\nplt.title(\"Sine Wave Example\")\nplt.show()\n\n\n\n\n\n\n\nFigure 2: Visualize plots With Code"
   },
   {
     "objectID": "01_intro.html#what-is-deep-learning",
@@ -82,6 +82,13 @@
     "title": "Training Deep Learning Models",
     "section": "Training Deep Learning Models in PyTorch",
     "text": "Training Deep Learning Models in PyTorch\n\nOptimizers\n\n\nLoss Functions"
+  },
+  {
+    "objectID": "05_examples.html#biomass",
+    "href": "05_examples.html#biomass",
+    "title": "Examples of Deep Learning Forest Inventory Products",
+    "section": "Biomass",
+    "text": "Biomass"
   },
   {
     "objectID": "05_examples.html#tree-species-composition",

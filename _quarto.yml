@@ -1,6 +1,7 @@
 project:
   type: website
   output-dir: docs
+  execute-dir: project
 
 website:
   title: "Deep Learning for Forest Inventories"
@@ -22,10 +23,15 @@ website:
         href: 04_validation.qmd
       - text: 5-Examples
         href: 05_examples.qmd
+numbering: true
 
+crossref:
+  fig-prefix: "Figure"
+  
 format:
   html:
     theme: sandstone
+    css: styles.css
     toc: true
     page-layout: full
 
@@ -35,3 +41,4 @@ execute:
   warning: false
   error: false
   cache: true
+  fig-num: true

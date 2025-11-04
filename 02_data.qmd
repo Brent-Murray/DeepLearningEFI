@@ -11,3 +11,39 @@ format:
 ## Loading Data in PyTorch
 
 
+```{python}
+#| label: fig-sine-wave-example-1
+#| fig-cap: "Visualize plots"
+#| fig-align: center
+#| fig-width: 6
+#| fig-height: 4
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(0, 2*np.pi, 200)
+y = np.sin(x)
+
+plt.plot(x, y)
+plt.title("Sine Wave Example")
+plt.show()
+```
+
+```{python}
+#| echo: true     # show code
+#| eval: true     # run it
+#| label: fig-sine-wave-example-2
+#| fig-cap: "Visualize plots With Code"
+#| fig-align: center
+#| fig-width: 6
+#| fig-height: 4
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(0, 2*np.pi, 200)
+y = np.sin(x)
+
+plt.plot(x, y)
+plt.title("Sine Wave Example")
+plt.show()
+```

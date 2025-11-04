@@ -1,1 +1,1 @@
-{"entries":[],"headings":["relevant-resources","data-preparation-for-use-in-deep-learning","loading-data-in-pytorch"]}
+{"entries":[{"caption":"Visualize plots","key":"fig-sine-wave-example-1","order":{"number":1,"section":[0,3,0,0,0,0,0]}},{"caption":"Visualize plots With Code","key":"fig-sine-wave-example-2","order":{"number":2,"section":[0,3,0,0,0,0,0]}}],"headings":["relevant-resources","data-preparation-for-use-in-deep-learning","loading-data-in-pytorch"],"options":{"fig-prefix":"Figure"}}
