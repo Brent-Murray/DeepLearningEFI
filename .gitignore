@@ -1,0 +1,6 @@
+# Based on Quarto Github Pages tutorial: https://quarto.org/docs/publishing/github-pages.html
+/.quarto/
+/_site/
+
+# Ingore data
+/data
