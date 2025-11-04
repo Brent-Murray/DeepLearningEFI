@@ -67,7 +67,14 @@
     "href": "01_intro.html#what-is-deep-learning",
     "title": "Introduction to Deep Learning",
     "section": "What is Deep Learning?",
-    "text": "What is Deep Learning?\nDeep learning is…"
+    "text": "What is Deep Learning?\nDeep learning is a branch of machine learning, and both are forms of artificial intelligence (AI). AI refers to methods that enable machines to mimic human behavior. Machine learning is a subset of AI that uses statistical techniques to allow machines to improve their performance through experience, while deep learning is a subset of machine learning that enables the computation of multi-layered neural networks. A neural network is a term that is used interchangably with deep learning and we will use them both throughout this workshop.\n\n\n\n\n\n\nFigure 1: AI Vendiagram\n\n\n\n\nComponents of a Deep Neural Network\n\n\n\n\n\n\nFigure 2: Components of a Neural Network\n\n\n\nThere are several key components and terms commonly used to describe a neural network. The depth of a neural network refers to the number of layers in its architecture (the example in Figure 2 has five layers), whereas the width refers to the number of neurons within each layer.\nThe most fundamental unit of a deep neural network is the neuron, which serves as the building block of any neural network. A neuron receives a set of inputs (\\(x_i\\)), computes their weighted sum (\\(w_i\\)), and adds a bias term (\\(b\\)). These weights and biases are adjustable parameters that the network learns during training.\n\\[\n\\Large y = w_1x_1 +w_2x_2 + b\n\\]\nAnother important part of a neuron is called the activation. The output of the weighted sum (\\(y\\)) is passed through an activation function, which determines the strength of the output and whether the neuron becomes activated or not.\n\n\n\n\n\n\nFigure 3: Components of a Neuron\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThere are many activation functions, and you are encouraged to resarch which one would be best for your specific use case.\n\n\n\n\nThe Prediction - Feedback Loop\nThe prediction-feedback loop is what makes learning possible as a deep learning model doesn’t just memorize, it adapts and generalizes. This allows a model to fine-tune how it sees the input data to improve its performace.\n\n\n\n\n\n\nFigure 4: Prediction-Feedback Loop\n\n\n\n\n\nImage Based vs. Point Based Deep Learning"
+  },
+  {
+    "objectID": "01_intro.html#challenges-with-deep-learning",
+    "href": "01_intro.html#challenges-with-deep-learning",
+    "title": "Introduction to Deep Learning",
+    "section": "Challenges with Deep Learning",
+    "text": "Challenges with Deep Learning\n\nImplemented in Python\n\n\nMany Models Use Linux"
   },
   {
     "objectID": "01_intro.html#frequently-asked-questions",
