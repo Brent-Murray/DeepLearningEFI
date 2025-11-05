@@ -11,7 +11,7 @@ website:
   repo-url: https://github.com/Brent-Murray/DeepLearningEFI
   repo-actions: [issue]
   navbar:
-    logo: "img/logo.png"
+    logo: "images/TreeNetwork.png"
     left:
       - text: Home
         href: index.qmd
