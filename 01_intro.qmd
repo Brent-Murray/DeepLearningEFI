@@ -5,35 +5,42 @@ format:
     toc: True
 ---
 ## Relevant Resources
+<a href="https://www.deeplearningbook.org/" target="_blank">The Deep Learning Book</a>
 
 ## What is Deep Learning?
 Deep learning is a branch of machine learning, and both are forms of artificial intelligence (AI). **AI** refers to methods that enable machines to mimic human behavior. **Machine learning** is a subset of AI that uses statistical techniques to allow machines to improve their performance through experience, while **deep learning** is a subset of machine learning that enables the computation of multi-layered neural networks. A neural network is a term that is used interchangably with deep learning and we will use them both throughout this workshop.
 
-![AI Vendiagram](images/aivendiagram.png){#fig-ai-vendiagram fig-align="center" width=50%}
+![Different Types of Artificial Intelligence and Common Examples of Each](images/aivendiagram.png){#fig-ai-vendiagram fig-align="center" width=50%}
 
 ### Components of a Deep Neural Network
-![Components of a Neural Network](images/neuralnet.png){#fig-neuralnetwork fig-align="center"}
-
 There are several key components and terms commonly used to describe a neural network. The **depth** of a neural network refers to the number of **layers** in its architecture (the example in @fig-neuralnetwork has five layers), whereas the **width** refers to the number of neurons within each layer.
 
-The most fundamental unit of a deep neural network is the **neuron**, which serves as the building block of any neural network. A neuron receives a set of inputs ($x_i$), computes their weighted sum ($w_i$), and adds a bias term ($b$). These **weights** and **biases** are adjustable parameters that the network learns during training.
+![Components of a Neural Network](images/neuralnet.png){#fig-neuralnetwork fig-align="center"}
+
+The most fundamental unit of a deep neural network is the **neuron**, which serves as the building block of any neural network. A neuron receives a set of inputs ($x_i$), weights ($w_i$) and sums them, while adding a bias term ($b$). These **weights** and **biases** are adjustable parameters that the network learns during **training**.
 
 $$
-\Large y = w_1x_1 +w_2x_2 + b
+\Large y = w_1x_1 + w_2x_2 + b
 $$
 
 Another important part of a neuron is called the **activation**. The output of the weighted sum ($y$) is passed through an activation function, which determines the strength of the output and whether the neuron becomes activated or not. 
 
-![Components of a Neuron](images/neuron.png){#fig-neuron fig-align="center" width=75%}
+![Components of a Neuron](images/neuron.png){#fig-neuron fig-align="center" width=60%}
 
 ::: callout-note
 There are many activation functions, and you are encouraged to resarch which one would be best for your specific use case. 
 :::
 
 ### The Prediction - Feedback Loop
-The **prediction-feedback loop** is what makes **learning** possible as a deep learning model doesn't just memorize, it **adapts** and **generalizes**. This allows a model to fine-tune how it *sees* the input data to improve its performace.
+The **prediction-feedback loop** is what makes **learning** possible as a deep learning model doesn't just memorize the data, it adapts and generalizes to it. This allows a model to fine-tune how it *sees* the input **data** to improve its performace based on the **goal** and the **task**.
 
-![Prediction-Feedback Loop](images/feedbackloop.png){#fig-feedback-loop fig-align="center" width=75%}
+![Prediction-Feedback Loop](images/feedbackloop.png){#fig-feedback-loop fig-align="center" width=60%}
+
+This prediction–feedback loop is driven by the goal of the **loss function**, which guides the model in adjusting its weights and biases to find the optimal solution. The loss function assesses the difference between the true and predicted **labels** typically, with the goal to minimize the error between the two. There are different types of loss functions, each providing different feedback to the model. Choosing a loss function depends on the task (e.g., classification, regression), and ensuring that it is appropriate for the problem is a crucial step.
+
+Over a number of iterations, or **epochs**, the model adjusts its weights and biases based on the feedback received from the loss function. Eventually, the model can no longer improve given the input data, and at this point, the loss begins to stabilize, indicating that the model has reached its optimal performance. 
+
+![Model Adjusting Over Epochs](images/epochs.gif){#fig-epochs fig-align="center"}
 
 ### Image Based vs. Point Based Deep Learning
 

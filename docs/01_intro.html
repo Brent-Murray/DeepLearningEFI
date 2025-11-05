@@ -208,6 +208,7 @@ window.Quarto = {
 
 <section id="relevant-resources" class="level2">
 <h2 class="anchored" data-anchor-id="relevant-resources">Relevant Resources</h2>
+<p><a href="https://www.deeplearningbook.org/" target="_blank">The Deep Learning Book</a></p>
 </section>
 <section id="what-is-deep-learning" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-deep-learning">What is Deep Learning?</h2>
@@ -218,12 +219,13 @@ window.Quarto = {
 <img src="images/aivendiagram.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ai-vendiagram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: AI Vendiagram
+Figure&nbsp;1: Different Types of Artificial Intelligence and Common Examples of Each
 </figcaption>
 </figure>
 </div>
 <section id="components-of-a-deep-neural-network" class="level3">
 <h3 class="anchored" data-anchor-id="components-of-a-deep-neural-network">Components of a Deep Neural Network</h3>
+<p>There are several key components and terms commonly used to describe a neural network. The <strong>depth</strong> of a neural network refers to the number of <strong>layers</strong> in its architecture (the example in <a href="#fig-neuralnetwork" class="quarto-xref">Figure&nbsp;2</a> has five layers), whereas the <strong>width</strong> refers to the number of neurons within each layer.</p>
 <div id="fig-neuralnetwork" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-neuralnetwork-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -234,16 +236,15 @@ Figure&nbsp;2: Components of a Neural Network
 </figcaption>
 </figure>
 </div>
-<p>There are several key components and terms commonly used to describe a neural network. The <strong>depth</strong> of a neural network refers to the number of <strong>layers</strong> in its architecture (the example in <a href="#fig-neuralnetwork" class="quarto-xref">Figure&nbsp;2</a> has five layers), whereas the <strong>width</strong> refers to the number of neurons within each layer.</p>
-<p>The most fundamental unit of a deep neural network is the <strong>neuron</strong>, which serves as the building block of any neural network. A neuron receives a set of inputs (<span class="math inline">\(x_i\)</span>), computes their weighted sum (<span class="math inline">\(w_i\)</span>), and adds a bias term (<span class="math inline">\(b\)</span>). These <strong>weights</strong> and <strong>biases</strong> are adjustable parameters that the network learns during training.</p>
+<p>The most fundamental unit of a deep neural network is the <strong>neuron</strong>, which serves as the building block of any neural network. A neuron receives a set of inputs (<span class="math inline">\(x_i\)</span>), weights (<span class="math inline">\(w_i\)</span>) and sums them, while adding a bias term (<span class="math inline">\(b\)</span>). These <strong>weights</strong> and <strong>biases</strong> are adjustable parameters that the network learns during <strong>training</strong>.</p>
 <p><span class="math display">\[
-\Large y = w_1x_1 +w_2x_2 + b
+\Large y = w_1x_1 + w_2x_2 + b
 \]</span></p>
 <p>Another important part of a neuron is called the <strong>activation</strong>. The output of the weighted sum (<span class="math inline">\(y\)</span>) is passed through an activation function, which determines the strength of the output and whether the neuron becomes activated or not.</p>
 <div id="fig-neuron" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-neuron-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/neuron.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%">
+<img src="images/neuron.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-neuron-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3: Components of a Neuron
@@ -266,14 +267,26 @@ Note
 </section>
 <section id="the-prediction---feedback-loop" class="level3">
 <h3 class="anchored" data-anchor-id="the-prediction---feedback-loop">The Prediction - Feedback Loop</h3>
-<p>The <strong>prediction-feedback loop</strong> is what makes <strong>learning</strong> possible as a deep learning model doesn’t just memorize, it <strong>adapts</strong> and <strong>generalizes</strong>. This allows a model to fine-tune how it <em>sees</em> the input data to improve its performace.</p>
+<p>The <strong>prediction-feedback loop</strong> is what makes <strong>learning</strong> possible as a deep learning model doesn’t just memorize the data, it adapts and generalizes to it. This allows a model to fine-tune how it <em>sees</em> the input <strong>data</strong> to improve its performace based on the <strong>goal</strong> and the <strong>task</strong>.</p>
 <div id="fig-feedback-loop" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-feedback-loop-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/feedbackloop.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%">
+<img src="images/feedbackloop.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-feedback-loop-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;4: Prediction-Feedback Loop
+</figcaption>
+</figure>
+</div>
+<p>This prediction–feedback loop is driven by the goal of the <strong>loss function</strong>, which guides the model in adjusting its weights and biases to find the optimal solution. The loss function assesses the difference between the true and predicted <strong>labels</strong> typically, with the goal to minimize the error between the two. There are different types of loss functions, each providing different feedback to the model. Choosing a loss function depends on the task (e.g., classification, regression), and ensuring that it is appropriate for the problem is a crucial step.</p>
+<p>Over a number of iterations, or <strong>epochs</strong>, the model adjusts its weights and biases based on the feedback received from the loss function. Eventually, the model can no longer improve given the input data, and at this point, the loss begins to stabilize, indicating that the model has reached its optimal performance.</p>
+<div id="fig-epochs" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-epochs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/epochs.gif" class="img-fluid quarto-figure quarto-figure-center figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-epochs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Model Adjusting Over Epochs
 </figcaption>
 </figure>
 </div>
