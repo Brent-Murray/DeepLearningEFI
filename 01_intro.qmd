@@ -36,7 +36,7 @@ The **prediction-feedback loop** is what makes **learning** possible as a deep l
 
 ![Prediction-Feedback Loop](images/feedbackloop.png){#fig-feedback-loop fig-align="center" width=60%}
 
-This prediction–feedback loop is driven by the goal of the **loss function**, which guides the model in adjusting its weights and biases to find the optimal solution. The loss function assesses the difference between the true and predicted **labels** typically, with the goal to minimize the error between the two. There are different types of loss functions, each providing different feedback to the model. Choosing a loss function depends on the task (e.g., classification, regression), and ensuring that it is appropriate for the problem is a crucial step.
+This prediction–feedback loop is driven by the goal of the **loss function**, which guides the model in adjusting its weights and biases to find the optimal solution. The loss function assesses the difference between the true and predicted **labels**, typically, with the goal to minimize the error between the two. There are different types of loss functions, each providing different feedback to the model. Choosing a loss function depends on the task (e.g., classification, regression), and ensuring that it is appropriate for the problem is a crucial step.
 
 Over a number of iterations, or **epochs**, the model adjusts its weights and biases based on the feedback received from the loss function. Eventually, the model can no longer improve given the input data, and at this point, the loss begins to stabilize, indicating that the model has reached its optimal performance. 
 
@@ -61,6 +61,9 @@ Over a number of iterations, or **epochs**, the model adjusts its weights and bi
 | Can produce more accurate results | Requires A LOT of training data |
 
 ### When should a deep learning model be used?
+As the complexity of the data or the task increases deep learning becomes a more benifical option. Raw lidar data for example is a complex dataset and is well suited for deep learning tasks.
+
+![Data and Task Complexity for Deep and Machine Learning](images/dlcomplexity.png){#fig-deeplearning-complexity fig-align="center" width=40%}
 
 ### What computing resources are required to run a deep learning model?
 

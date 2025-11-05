@@ -281,7 +281,7 @@ Figure&nbsp;4: Prediction-Feedback Loop
 </figcaption>
 </figure>
 </div>
-<p>This prediction–feedback loop is driven by the goal of the <strong>loss function</strong>, which guides the model in adjusting its weights and biases to find the optimal solution. The loss function assesses the difference between the true and predicted <strong>labels</strong> typically, with the goal to minimize the error between the two. There are different types of loss functions, each providing different feedback to the model. Choosing a loss function depends on the task (e.g., classification, regression), and ensuring that it is appropriate for the problem is a crucial step.</p>
+<p>This prediction–feedback loop is driven by the goal of the <strong>loss function</strong>, which guides the model in adjusting its weights and biases to find the optimal solution. The loss function assesses the difference between the true and predicted <strong>labels</strong>, typically, with the goal to minimize the error between the two. There are different types of loss functions, each providing different feedback to the model. Choosing a loss function depends on the task (e.g., classification, regression), and ensuring that it is appropriate for the problem is a crucial step.</p>
 <p>Over a number of iterations, or <strong>epochs</strong>, the model adjusts its weights and biases based on the feedback received from the loss function. Eventually, the model can no longer improve given the input data, and at this point, the loss begins to stabilize, indicating that the model has reached its optimal performance.</p>
 <div id="fig-epochs" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -334,6 +334,17 @@ Figure&nbsp;5: Model Adjusting Over Epochs
 </section>
 <section id="when-should-a-deep-learning-model-be-used" class="level3">
 <h3 class="anchored" data-anchor-id="when-should-a-deep-learning-model-be-used">When should a deep learning model be used?</h3>
+<p>As the complexity of the data or the task increases deep learning becomes a more benifical option. Raw lidar data for example is a complex dataset and is well suited for deep learning tasks.</p>
+<div id="fig-deeplearning-complexity" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-deeplearning-complexity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/dlcomplexity.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:40.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-deeplearning-complexity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Data and Task Complexity for Deep and Machine Learning
+</figcaption>
+</figure>
+</div>
 </section>
 <section id="what-computing-resources-are-required-to-run-a-deep-learning-model" class="level3">
 <h3 class="anchored" data-anchor-id="what-computing-resources-are-required-to-run-a-deep-learning-model">What computing resources are required to run a deep learning model?</h3>
