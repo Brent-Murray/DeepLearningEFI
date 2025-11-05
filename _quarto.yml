@@ -6,10 +6,12 @@ project:
 website:
   title: "Deep Learning for Forest Inventories"
   description: "Workshop on deep learning applications for enhanced forest inventories"
+  favicon: "images/TreeNetwork.png"
   site-url: https://Brent-Murray.github.io/DeepLearningEFI/
   repo-url: https://github.com/Brent-Murray/DeepLearningEFI
   repo-actions: [issue]
   navbar:
+    logo: "img/logo.png"
     left:
       - text: Home
         href: index.qmd
