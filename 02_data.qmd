@@ -3,47 +3,380 @@ title: "Data Preparation and Loading"
 format:
   html:
     toc: True
+execute:
+  echo: true
 ---
+
+![](https://opendata.nfis.org/mapserver/PRF_Layout.jpg){fig-alt="Petawawa Forest Map" caption="" width="60%"}
+
 ## Relevant Resources
 
-## Data Preparation for Use in Deep Learning
+## Data download
 
-## Loading Data in PyTorch
+PRF 2018 sample plots have a 14.1 m radius (625 m^2^)
 
+The height normalized single photon LiDAR and sample plot data for thr PRF can be downloaded below:
 
-```{python}
-#| label: fig-sine-wave-example-1
-#| fig-cap: "Visualize plots"
-#| fig-align: center
-#| fig-width: 6
-#| fig-height: 4
-import numpy as np
-import matplotlib.pyplot as plt
+SPL LiDAR: https://opendata.nfis.org/downloads/petawawa/Raster/LiDAR_2018/PRF_benchmarking_harmonized_2018_ALS.zip
 
-x = np.linspace(0, 2*np.pi, 200)
-y = np.sin(x)
+Field Plots: https://opendata.nfis.org/downloads/petawawa/Vector/Forest%20Sample%20Plots/SPL2018_EFI_ground_plots.zip
 
-plt.plot(x, y)
-plt.title("Sine Wave Example")
-plt.show()
+## Summary of Preprocessing Steps
+
+1) Extract ALS point clouds corresponding to ground reference plots
+
+2) Normalize X and Y coordinates
+
+3) Compare 95th height percentile of measured tree heights with ALS derived 95th height percentile
+
+4) Derive point cloud "labels", establishing which plots are coniferous/deciduous/mixed
+
+5) Split the data into training, validation, and test sets (i.e., splits)
+
+6) Export point clouds to numpy files for later processing
+
+## Extract LiDAR point clouds using the lidR package
+
+Set filepaths and other global parameters
+
+```{r}
+
+PLOT_RADIUS = 14.1
+
+PLOT_COORDS_FPATH = 'data/SPL2018_EFI_ground_plots/SPL2018_EFI_ground_plots/PRF_SPL2018_EFI_plots_pts_wgs84.shp'
+
+PLOT_DATA_FPATH = 'data/SPL2018_EFI_ground_plots/SPL2018_EFI_ground_plots/PRF_CNL_SPL_CalibrationData_LiveDeadStems.xlsx'
+
+TREE_SP_CODES_FPATH = 'data/mnrf_sp_codes.csv'
+
+LIDAR_DIR = 'E:/PRF/3_tiled_norm'
+
+PLOT_PC_DIR = "data/plot_point_clouds"
+
+LABELS_FPATH = 'data/labels.csv'
+
 ```
 
-```{python}
-#| echo: true     # show code
-#| eval: true     # run it
-#| label: fig-sine-wave-example-2
-#| fig-cap: "Visualize plots With Code"
-#| fig-align: center
-#| fig-width: 6
-#| fig-height: 4
 
-import numpy as np
-import matplotlib.pyplot as plt
+Load required R packages
 
-x = np.linspace(0, 2*np.pi, 200)
-y = np.sin(x)
+```{r}
 
-plt.plot(x, y)
-plt.title("Sine Wave Example")
-plt.show()
+library(lidR)
+library(here)
+library(sf)
+library(dplyr)
+library(mapview)
+library(readxl)
+library(ggplot2)
+library(plotly)
+library(reticulate)
+
 ```
+
+Load the LiDAR and plot coordinates
+
+```{r}
+
+#Read the normalized las catalog
+ctg <- readLAScatalog(LIDAR_DIR)
+
+#Set some catalog processing parameters
+opt_select(ctg) <- "xyz"
+opt_progress(ctg) <- FALSE
+
+#Read the plot coordinates and ensure CRS is correct
+plot_centers <- st_read(here(PLOT_COORDS_FPATH)) %>%
+    st_transform(lidR::crs(ctg)) %>%
+    st_zm() %>%
+    dplyr::rename(plot_id = Plot)
+
+#Get vector representation of catalog area
+ctg_sf <- st_as_sf(lidR::as.spatial(ctg))
+
+mapview(ctg_sf, layer.name = 'LiDAR Tiles') + mapview(plot_centers, 
+                                                      col.regions = 'red', 
+                                                      color = 'black',
+                                                      layer.name = 'Ground Plots')
+
+```
+
+Define functions to process ALS data
+
+````{r}
+
+extract_pc <- function(coords, ctg){
+
+      x = coords[1]
+      y = coords[2]
+
+      las <- lidR::clip_circle(
+        las = ctg,
+        x = x,
+        y = y,
+        radius = PLOT_RADIUS)
+      
+      return(las)
+
+    }
+
+clean_pc <- function(las) {
+  
+  las <- lidR::filter_duplicates(las)
+  
+  las <- lidR::classify_noise(las, sor(9,2))
+  
+  las <- lidR::filter_poi(las, Classification != LASNOISE)
+  
+  return(las)
+}
+
+pc_to_matrix <- function(las){
+
+  pc <- unname(st_coordinates(las))
+
+  return(pc)
+
+}
+
+normalize_pc_xy <- function(pc){
+
+  pc[, 1] <- pc[, 1] - mean(pc[, 1])
+  pc[, 2] <- pc[, 2] - mean(pc[, 2])
+
+  return(pc)
+}
+
+calc_pc_zq95 <- function(pc){
+
+    zq95 <- quantile(pc[, 3], probs = 0.95)
+
+    return(zq95)
+
+}
+
+plot_pc <- function(pc){
+
+  pc_df <- as.data.frame(pc)
+  names(pc_df) <- c('x', 'y', 'z')
+
+  p <- plot_ly(pc_df, x = ~x, y = ~y, z = ~z, type = "scatter3d", mode = "markers",
+             marker = list(size = 3, color = ~z, colorscale = "Jet")) %>%
+            layout(title = "",
+                  scene = list(
+                    xaxis = list(title = "", showgrid = FALSE, showticklabels = TRUE, ticks = "outside"),
+                    yaxis = list(title = "", showgrid = FALSE, showticklabels = TRUE, ticks = "outside"),
+                    zaxis = list(title = "Z", showgrid = FALSE, showticklabels = TRUE, ticks = "outside")
+                  ))
+
+  return(p)
+
+}
+
+write_pc_to_npy <- function(pc, plot_id, pc_out_dir){    
+    
+    pc_np <- np$array(pc, dtype = "float32")
+
+    np$save(file.path(here(pc_out_dir), paste0(plot_id, ".npy")), pc_np)
+
+    return('')
+    
+    }
+
+````
+
+Extract plot point clouds from full aquisition
+
+````{r}
+
+#TODO: Subset for testing, rm later
+plot_centers <- plot_centers %>% slice_head(n = 3)
+
+# Get a list of plot coordinates
+coords <- split(st_coordinates(plot_centers), 
+                  seq_len(nrow(plot_centers)))
+
+# Extract point clouds and store in list
+pc_ls <- plyr::llply(coords, .fun = extract_pc, ctg = ctg)
+
+# Clean point clouds
+pc_ls <- plyr::llply(pc_ls, .fun = clean_pc)
+
+# Convert point clouds to matrices
+pc_ls <- plyr::llply(pc_ls, .fun = pc_to_matrix)
+
+# Normalize point clouds X & Y coordinates (leave Z)
+pc_ls <- plyr::llply(pc_ls, .fun = normalize_pc_xy)
+
+# Calculate zq95 for each point cloud to check alignment with plot data later
+als_derived_zq95_ls <- plyr::llply(pc_ls, .fun = calc_pc_zq95)
+
+# Add plot IDs to pc list
+names(pc_ls) <- plot_centers$plot_id
+
+# Visualize a point cloud
+plot_pc(pc_ls[[3]])
+
+
+````
+
+
+Load tree measurements
+
+````{r}
+
+# Load plot level tree measurements
+trees_df <- read_excel(PLOT_DATA_FPATH, sheet = 'Tree') %>%
+              dplyr::rename(plot_id = PlotName,
+                            sp_code = tree_spec)
+
+
+head(trees_df)
+````
+
+Compare 95th height percentiles derived from LiDAR with the 95th percentile of measured tree heights
+
+````{r}
+
+als_derived_zq95_df <- data.frame(plot_id = plot_centers$plot_id,
+                                  als_zq95 = as.numeric(als_derived_zq95_ls))
+
+field_zq95_df <- trees_df %>%
+                filter(!is.na(ht_meas)) %>%
+                group_by(plot_id) %>%
+                summarize(field_zq95 = quantile(ht_meas, probs = 0.95))
+
+zq95_df <- field_zq95_df %>%
+              left_join(als_derived_zq95_df, by = 'plot_id')
+
+zq95_df %>%
+  ggplot(aes(x = field_zq95, y = als_zq95)) + 
+  geom_point() + 
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red") +
+  theme_minimal() + 
+  coord_fixed(ratio = 1)
+````
+
+Add species information to trees data
+
+````{r}
+
+# Load tree species codes
+tree_sp_codes_df <- read.csv(TREE_SP_CODES_FPATH) %>%
+                      mutate(species = trimws(species))
+
+
+# Add species names to trees df
+trees_df <- trees_df %>% left_join(tree_sp_codes_df, 
+                                   by = 'sp_code') 
+
+
+# View unique species
+sort(round(table(trees_df['species']) / nrow(trees_df) * 100, 2), 
+     decreasing = TRUE)
+
+````
+
+Classify each plot as either dominated by coniferous or deciduous species.
+
+````{r}
+
+get_tvol_d_perc <- function(trees){
+
+  decid_tvol <- trees %>% 
+                  filter(sp_type == 'd') %>%
+                  pull(tvol) %>%
+                  sum()
+
+  plot_tvol <- trees %>% 
+                  pull(tvol) %>%
+                  sum()
+
+  perc_tvol_d <- decid_tvol / plot_tvol * 100
+
+  return(perc_tvol_d)
+
+  }
+
+perc_d_vec <- vector(mode = 'numeric')
+
+for(plot_id_i in unique(trees_df$plot_id)){
+
+  plot_i_trees <- trees_df[trees_df['plot_id'] == plot_id_i, ]
+
+  perc_d_vec <- append(perc_d_vec, get_tvol_d_perc(plot_i_trees))
+
+}
+
+# Assing plot to be either coniferous or deciduous dominant
+perc_decid_df <- data.frame(plot_id = unique(trees_df$plot_id),
+                            perc_decid = perc_d_vec) %>%
+                  mutate(dom_sp_type = if_else(perc_decid > 75, 'decid', 
+                                       if_else(perc_decid > 25 , 'mixed', 'conif')))
+
+
+hist(perc_decid_df$perc_decid)
+
+head(perc_decid_df)
+
+````
+
+Divide data into training, validation, and testing
+
+````{r}
+
+# Establish the number of samples per split
+n_test <- round(nrow(perc_decid_df) * 0.15, 0)
+
+n_train <-  round(nrow(perc_decid_df) * 0.70, 0)
+
+set.seed(25)
+test_df <- perc_decid_df %>%
+    slice_sample(n=n_test) %>%
+    mutate(split = "test")
+  
+set.seed(25)
+train_df <- perc_decid_df %>%
+    anti_join(test_df, by = "plot_id") %>%
+    slice_sample(n=n_train) %>%
+    mutate(split = "train")
+  
+val_df <- perc_decid_df %>%
+    anti_join(train_df, by = "plot_id") %>%
+    anti_join(test_df, by = "plot_id")
+
+# Check splits
+
+cat(
+  sprintf("N Train Samples: %d (%.1f%%)\n", nrow(train_df), 100 * nrow(train_df) / nrow(perc_decid_df)),
+  sprintf("N Val Samples:   %d (%.1f%%)\n", nrow(val_df), 100 * nrow(val_df) / nrow(perc_decid_df)),
+  sprintf("N Test Samples:  %d (%.1f%%)\n", nrow(test_df), 100 * nrow(test_df) / nrow(perc_decid_df))
+)
+
+# Combine data frames
+labels_df <- dplyr::bind_rows(train_df, val_df, test_df)
+
+head(labels_df)
+
+````
+
+Export preprocessed point clouds and labels
+
+````{r}
+
+# Ensure labels contain the same plots as the ALS point clouds
+labels_df <- labels_df %>% filter(plot_id %in% names(pc_ls))
+
+# Import python numpy module using reticulate in quarto
+np <- reticulate::import("numpy")
+
+# Export point clouds to numpy (.npy) files for use in python
+mapply(write_pc_to_npy, 
+       pc = pc_ls,
+       plot_id = plot_centers$plot_id,
+       pc_out_dir=PLOT_PC_DIR)
+
+# Export labels
+write.csv(labels_df, LABELS_FPATH, row.names=FALSE)
+
+````
