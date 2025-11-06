@@ -1,5 +1,5 @@
 ---
-title: "Data Preparation and Loading"
+title: "Data Preparation"
 format:
   html:
     toc: True
@@ -15,11 +15,15 @@ execute:
 
 PRF 2018 sample plots have a 14.1 m radius (625 m^2^)
 
-The height normalized single photon LiDAR and sample plot data for thr PRF can be downloaded below:
+The preprocessed data folder can be downloaded here
 
-SPL LiDAR: https://opendata.nfis.org/downloads/petawawa/Raster/LiDAR_2018/PRF_benchmarking_harmonized_2018_ALS.zip
+[https://ln5.sync.com/dl/88a6f5dd0#u24mrtkh-d5dqhart-zrg42shx-jfhhk8u5](https://ln5.sync.com/dl/88a6f5dd0#u24mrtkh-d5dqhart-zrg42shx-jfhhk8u5)
 
-Field Plots: https://opendata.nfis.org/downloads/petawawa/Vector/Forest%20Sample%20Plots/SPL2018_EFI_ground_plots.zip
+The original height normalized LiDAR and sample plot data for the PRF can be downloaded below:
+
+SPL LiDAR: [https://opendata.nfis.org/downloads/petawawa/Raster/LiDAR_2018/PRF_benchmarking_harmonized_2018_ALS.zip](https://opendata.nfis.org/downloads/petawawa/Raster/LiDAR_2018/PRF_benchmarking_harmonized_2018_ALS.zip)
+
+Field Plots: [https://opendata.nfis.org/downloads/petawawa/Vector/Forest%20Sample%20Plots/SPL2018_EFI_ground_plots.zip](https://opendata.nfis.org/downloads/petawawa/Vector/Forest%20Sample%20Plots/SPL2018_EFI_ground_plots.zip)
 
 ## Summary of Preprocessing Steps
 
@@ -41,6 +45,8 @@ Set filepaths and other global parameters
 
 ```{r}
 
+PROCESS_LIDAR = FALSE
+
 PLOT_RADIUS = 14.1
 
 PLOT_COORDS_FPATH = 'data/SPL2018_EFI_ground_plots/SPL2018_EFI_ground_plots/PRF_SPL2018_EFI_plots_pts_wgs84.shp'
@@ -54,6 +60,8 @@ LIDAR_DIR = 'E:/PRF/3_tiled_norm'
 PLOT_PC_DIR = "data/plot_point_clouds"
 
 LABELS_FPATH = 'data/labels.csv'
+
+ZQ95_FPATH = 'data/zq95.csv'
 
 ```
 
@@ -71,6 +79,9 @@ library(readxl)
 library(ggplot2)
 library(plotly)
 library(reticulate)
+
+# Import python numpy module using reticulate in quarto
+np <- reticulate::import("numpy")
 
 ```
 
@@ -189,34 +200,55 @@ Extract plot point clouds from full aquisition
 
 ````{r}
 
-#TODO: Subset for testing, rm later
-plot_centers <- plot_centers %>% slice_head(n = 3)
+if(PROCESS_LIDAR){
 
-# Get a list of plot coordinates
-coords <- split(st_coordinates(plot_centers), 
-                  seq_len(nrow(plot_centers)))
+  # Get a list of plot coordinates
+  coords <- split(st_coordinates(plot_centers), 
+                    seq_len(nrow(plot_centers)))
 
-# Extract point clouds and store in list
-pc_ls <- plyr::llply(coords, .fun = extract_pc, ctg = ctg)
+  # Extract point clouds and store in list
+  pc_ls <- plyr::llply(coords, .fun = extract_pc, ctg = ctg, .progress='text')
 
-# Clean point clouds
-pc_ls <- plyr::llply(pc_ls, .fun = clean_pc)
+  # Clean point clouds
+  pc_ls <- plyr::llply(pc_ls, .fun = clean_pc, .progress='text')
 
-# Convert point clouds to matrices
-pc_ls <- plyr::llply(pc_ls, .fun = pc_to_matrix)
+  # Convert point clouds to matrices
+  pc_ls <- plyr::llply(pc_ls, .fun = pc_to_matrix, .progress='text')
 
-# Normalize point clouds X & Y coordinates (leave Z)
-pc_ls <- plyr::llply(pc_ls, .fun = normalize_pc_xy)
+  # Normalize point clouds X & Y coordinates (leave Z)
+  pc_ls <- plyr::llply(pc_ls, .fun = normalize_pc_xy, .progress='text')
 
-# Calculate zq95 for each point cloud to check alignment with plot data later
-als_derived_zq95_ls <- plyr::llply(pc_ls, .fun = calc_pc_zq95)
+  # Calculate zq95 for each point cloud to check alignment with plot data later
+  als_derived_zq95_ls <- plyr::llply(pc_ls, .fun = calc_pc_zq95, .progress='text')
 
-# Add plot IDs to pc list
-names(pc_ls) <- plot_centers$plot_id
+  # Ensure the point cloud directory exists
+  dir.create(PLOT_PC_DIR, recursive = TRUE, showWarnings = FALSE)
+
+  # Export point clouds to numpy (.npy) files for use in python
+  mapply(write_pc_to_npy, 
+        pc = pc_ls,
+        plot_id = plot_centers$plot_id,
+        pc_out_dir=PLOT_PC_DIR)
+
+  # Export ZQ95 values
+  als_derived_zq95_df <- data.frame(plot_id = plot_centers$plot_id,
+                                    als_zq95 = as.numeric(als_derived_zq95_ls))
+
+  write.csv(als_derived_zq95_df, ZQ95_FPATH, row.names=FALSE)
+
+}
+
+
+````
+
+
+````{r}
+
+# Load an example pc
+demo_pc <- np$load(list.files(PLOT_PC_DIR, full.names = TRUE)[50])
 
 # Visualize a point cloud
-plot_pc(pc_ls[[3]])
-
+plot_pc(demo_pc)
 
 ````
 
@@ -238,8 +270,7 @@ Compare 95th height percentiles derived from LiDAR with the 95th percentile of m
 
 ````{r}
 
-als_derived_zq95_df <- data.frame(plot_id = plot_centers$plot_id,
-                                  als_zq95 = as.numeric(als_derived_zq95_ls))
+als_derived_zq95_df <- read.csv(ZQ95_FPATH)
 
 field_zq95_df <- trees_df %>%
                 filter(!is.na(ht_meas)) %>%
@@ -255,6 +286,7 @@ zq95_df %>%
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red") +
   theme_minimal() + 
   coord_fixed(ratio = 1)
+
 ````
 
 Add species information to trees data
@@ -326,16 +358,16 @@ Divide data into training, validation, and testing
 ````{r}
 
 # Establish the number of samples per split
-n_test <- round(nrow(perc_decid_df) * 0.15, 0)
+n_test <- round(nrow(perc_decid_df) * 0.20, 0)
 
-n_train <-  round(nrow(perc_decid_df) * 0.70, 0)
+n_train <-  round(nrow(perc_decid_df) * 0.60, 0)
 
-set.seed(25)
+set.seed(14)
 test_df <- perc_decid_df %>%
     slice_sample(n=n_test) %>%
     mutate(split = "test")
   
-set.seed(25)
+set.seed(14)
 train_df <- perc_decid_df %>%
     anti_join(test_df, by = "plot_id") %>%
     slice_sample(n=n_train) %>%
@@ -343,10 +375,11 @@ train_df <- perc_decid_df %>%
   
 val_df <- perc_decid_df %>%
     anti_join(train_df, by = "plot_id") %>%
-    anti_join(test_df, by = "plot_id")
+    anti_join(test_df, by = "plot_id") %>%
+    mutate(split = "val")
+
 
 # Check splits
-
 cat(
   sprintf("N Train Samples: %d (%.1f%%)\n", nrow(train_df), 100 * nrow(train_df) / nrow(perc_decid_df)),
   sprintf("N Val Samples:   %d (%.1f%%)\n", nrow(val_df), 100 * nrow(val_df) / nrow(perc_decid_df)),
@@ -356,25 +389,34 @@ cat(
 # Combine data frames
 labels_df <- dplyr::bind_rows(train_df, val_df, test_df)
 
+# View frequency by split
+ggplot(labels_df, aes(x = split, fill = dom_sp_type)) +
+  geom_bar(position = "dodge") +
+  geom_text(stat = "count", aes(label = ..count..), 
+            position = position_dodge(width = 0.9), vjust = -0.5, color = "black", size = 5) +
+  labs(x = "Data Split",
+       y = "Number of Observations",
+       fill = "Dominant Species Type") +
+  theme_minimal() +
+  scale_fill_brewer(
+    palette = "Set2",
+    labels = c("conif" = "Coniferous", "decid" = "Deciduous", "mixed" = "Mixed")
+  )
+
 head(labels_df)
 
 ````
 
-Export preprocessed point clouds and labels
+Export labels
 
 ````{r}
 
+# Ensure that labels correspond to existing point cloud files
+pc_flist <- list.files(PLOT_PC_DIR, full.names = TRUE)
+pc_id_ls <- gsub(".npy", "", basename(pc_flist))
+
 # Ensure labels contain the same plots as the ALS point clouds
-labels_df <- labels_df %>% filter(plot_id %in% names(pc_ls))
-
-# Import python numpy module using reticulate in quarto
-np <- reticulate::import("numpy")
-
-# Export point clouds to numpy (.npy) files for use in python
-mapply(write_pc_to_npy, 
-       pc = pc_ls,
-       plot_id = plot_centers$plot_id,
-       pc_out_dir=PLOT_PC_DIR)
+labels_df <- labels_df %>% filter(plot_id %in% pc_id_ls)
 
 # Export labels
 write.csv(labels_df, LABELS_FPATH, row.names=FALSE)
