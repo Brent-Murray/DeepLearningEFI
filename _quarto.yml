@@ -42,5 +42,5 @@ execute:
   echo: false
   warning: false
   error: false
-  cache: true
+  cache: false
   fig-num: true
