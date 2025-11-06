@@ -63,18 +63,39 @@
     "text": "Loading Data in PyTorch"
   },
   {
+    "objectID": "01_intro.html",
+    "href": "01_intro.html",
+    "title": "Introduction to Deep Learning",
+    "section": "",
+    "text": "The Deep Learning Book"
+  },
+  {
+    "objectID": "01_intro.html#relevant-resources",
+    "href": "01_intro.html#relevant-resources",
+    "title": "Introduction to Deep Learning",
+    "section": "",
+    "text": "The Deep Learning Book"
+  },
+  {
     "objectID": "01_intro.html#what-is-deep-learning",
     "href": "01_intro.html#what-is-deep-learning",
     "title": "Introduction to Deep Learning",
     "section": "What is Deep Learning?",
-    "text": "What is Deep Learning?\nDeep learning is…"
+    "text": "What is Deep Learning?\nDeep learning is a branch of machine learning, and both are forms of artificial intelligence (AI). AI refers to methods that enable machines to mimic human behavior. Machine learning is a subset of AI that uses statistical techniques to allow machines to improve their performance through experience, while deep learning is a subset of machine learning that enables the computation of multi-layered neural networks. A neural network is a term that is used interchangably with deep learning and we will use them both throughout this workshop.\n\n\n\n\n\n\nFigure 1: Different Types of Artificial Intelligence and Common Examples of Each\n\n\n\n\nComponents of a Deep Neural Network\nThere are several key components and terms commonly used to describe a neural network. The depth of a neural network refers to the number of layers in its architecture (the example in Figure 2 has five layers), whereas the width refers to the number of neurons within each layer.\n\n\n\n\n\n\nFigure 2: Components of a Neural Network\n\n\n\nThe most fundamental unit of a deep neural network is the neuron, which serves as the building block of any neural network. A neuron receives a set of inputs (\\(x_i\\)), weights (\\(w_i\\)) and sums them, while adding a bias term (\\(b\\)). These weights and biases are adjustable parameters that the network learns during training.\n\\[\n\\Large y = w_1x_1 + w_2x_2 + b\n\\]\nAnother important part of a neuron is called the activation. The output of the weighted sum (\\(y\\)) is passed through an activation function, which determines the strength of the output and whether the neuron becomes activated or not.\n\n\n\n\n\n\nFigure 3: Components of a Neuron\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThere are many activation functions, and you are encouraged to resarch which one would be best for your specific use case.\n\n\n\n\nThe Prediction - Feedback Loop\nThe prediction-feedback loop is what makes learning possible as a deep learning model doesn’t just memorize the data, it adapts and generalizes to it. This allows a model to fine-tune how it sees the input data to improve its performace based on the goal and the task.\n\n\n\n\n\n\nFigure 4: Prediction-Feedback Loop\n\n\n\nThis prediction–feedback loop is driven by the goal of the loss function, which guides the model in adjusting its weights and biases to find the optimal solution. The loss function assesses the difference between the true and predicted labels, typically, with the goal to minimize the error between the two. There are different types of loss functions, each providing different feedback to the model. Choosing a loss function depends on the task (e.g., classification, regression), and ensuring that it is appropriate for the problem is a crucial step.\nOver a number of iterations, or epochs, the model adjusts its weights and biases based on the feedback received from the loss function. Eventually, the model can no longer improve given the input data, and at this point, the loss begins to stabilize, indicating that the model has reached its optimal performance.\n\n\n\n\n\n\nFigure 5: Model Adjusting Over Epochs\n\n\n\n\n\nImage Based vs. Point Based Deep Learning"
+  },
+  {
+    "objectID": "01_intro.html#challenges-with-deep-learning",
+    "href": "01_intro.html#challenges-with-deep-learning",
+    "title": "Introduction to Deep Learning",
+    "section": "Challenges with Deep Learning",
+    "text": "Challenges with Deep Learning\n\nImplemented in Python\n\n\nMany Models Use Linux"
   },
   {
     "objectID": "01_intro.html#frequently-asked-questions",
     "href": "01_intro.html#frequently-asked-questions",
     "title": "Introduction to Deep Learning",
     "section": "Frequently Asked Questions",
-    "text": "Frequently Asked Questions\n\nHow does deep learning differ from machine learning or artifical intelligence?\n\n\nWhat makes deep learning deep?\n\n\nWhat are some advantages and disadvantages of deep learning?\n\n\n\nAdvantages\nDisadvantages\n\n\n\n\nCan produce more accurate results\nRequires A LOT of training data\n\n\n\n\n\nWhen should a deep learning model be used?\n\n\nWhat computing resources are required to run a deep learning model?"
+    "text": "Frequently Asked Questions\n\nHow does deep learning differ from machine learning or artifical intelligence?\n\n\nWhat makes deep learning deep?\n\n\nWhat are some advantages and disadvantages of deep learning?\n\n\n\nAdvantages\nDisadvantages\n\n\n\n\nCan produce more accurate results\nRequires A LOT of training data\n\n\n\n\n\nWhen should a deep learning model be used?\nAs the complexity of the data or the task increases deep learning becomes a more benifical option. Raw lidar data for example is a complex dataset and is well suited for deep learning tasks.\n\n\n\n\n\n\nFigure 6: Data and Task Complexity for Deep and Machine Learning\n\n\n\n\n\nWhat computing resources are required to run a deep learning model?"
   },
   {
     "objectID": "03_train.html#training-deep-learning-models-in-pytorch",

@@ -4,3 +4,5 @@
 
 # Ingore data
 /data
+
+**/*.quarto_ipynb

@@ -30,6 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./images/TreeNetwork.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -69,6 +70,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -81,6 +111,8 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/TreeNetwork.png" alt="" class="navbar-logo light-content">
+    <img src="./images/TreeNetwork.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Deep Learning for Forest Inventories</span>
@@ -133,7 +165,17 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#relevant-resources" id="toc-relevant-resources" class="nav-link active" data-scroll-target="#relevant-resources">Relevant Resources</a></li>
-  <li><a href="#what-is-deep-learning" id="toc-what-is-deep-learning" class="nav-link" data-scroll-target="#what-is-deep-learning">What is Deep Learning?</a></li>
+  <li><a href="#what-is-deep-learning" id="toc-what-is-deep-learning" class="nav-link" data-scroll-target="#what-is-deep-learning">What is Deep Learning?</a>
+  <ul class="collapse">
+  <li><a href="#components-of-a-deep-neural-network" id="toc-components-of-a-deep-neural-network" class="nav-link" data-scroll-target="#components-of-a-deep-neural-network">Components of a Deep Neural Network</a></li>
+  <li><a href="#the-prediction---feedback-loop" id="toc-the-prediction---feedback-loop" class="nav-link" data-scroll-target="#the-prediction---feedback-loop">The Prediction - Feedback Loop</a></li>
+  <li><a href="#image-based-vs.-point-based-deep-learning" id="toc-image-based-vs.-point-based-deep-learning" class="nav-link" data-scroll-target="#image-based-vs.-point-based-deep-learning">Image Based vs.&nbsp;Point Based Deep Learning</a></li>
+  </ul></li>
+  <li><a href="#challenges-with-deep-learning" id="toc-challenges-with-deep-learning" class="nav-link" data-scroll-target="#challenges-with-deep-learning">Challenges with Deep Learning</a>
+  <ul class="collapse">
+  <li><a href="#implemented-in-python" id="toc-implemented-in-python" class="nav-link" data-scroll-target="#implemented-in-python">Implemented in Python</a></li>
+  <li><a href="#many-models-use-linux" id="toc-many-models-use-linux" class="nav-link" data-scroll-target="#many-models-use-linux">Many Models Use Linux</a></li>
+  </ul></li>
   <li><a href="#frequently-asked-questions" id="toc-frequently-asked-questions" class="nav-link" data-scroll-target="#frequently-asked-questions">Frequently Asked Questions</a>
   <ul class="collapse">
   <li><a href="#how-does-deep-learning-differ-from-machine-learning-or-artifical-intelligence" id="toc-how-does-deep-learning-differ-from-machine-learning-or-artifical-intelligence" class="nav-link" data-scroll-target="#how-does-deep-learning-differ-from-machine-learning-or-artifical-intelligence">How does deep learning differ from machine learning or artifical intelligence?</a></li>
@@ -169,10 +211,101 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="relevant-resources" class="level2">
 <h2 class="anchored" data-anchor-id="relevant-resources">Relevant Resources</h2>
+<p><a href="https://www.deeplearningbook.org/" target="_blank">The Deep Learning Book</a></p>
 </section>
 <section id="what-is-deep-learning" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-deep-learning">What is Deep Learning?</h2>
-<p>Deep learning is…</p>
+<p>Deep learning is a branch of machine learning, and both are forms of artificial intelligence (AI). <strong>AI</strong> refers to methods that enable machines to mimic human behavior. <strong>Machine learning</strong> is a subset of AI that uses statistical techniques to allow machines to improve their performance through experience, while <strong>deep learning</strong> is a subset of machine learning that enables the computation of multi-layered neural networks. A neural network is a term that is used interchangably with deep learning and we will use them both throughout this workshop.</p>
+<div id="fig-ai-vendiagram" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ai-vendiagram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/aivendiagram.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ai-vendiagram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Different Types of Artificial Intelligence and Common Examples of Each
+</figcaption>
+</figure>
+</div>
+<section id="components-of-a-deep-neural-network" class="level3">
+<h3 class="anchored" data-anchor-id="components-of-a-deep-neural-network">Components of a Deep Neural Network</h3>
+<p>There are several key components and terms commonly used to describe a neural network. The <strong>depth</strong> of a neural network refers to the number of <strong>layers</strong> in its architecture (the example in <a href="#fig-neuralnetwork" class="quarto-xref">Figure&nbsp;2</a> has five layers), whereas the <strong>width</strong> refers to the number of neurons within each layer.</p>
+<div id="fig-neuralnetwork" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-neuralnetwork-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/neuralnet.png" class="img-fluid quarto-figure quarto-figure-center figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-neuralnetwork-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Components of a Neural Network
+</figcaption>
+</figure>
+</div>
+<p>The most fundamental unit of a deep neural network is the <strong>neuron</strong>, which serves as the building block of any neural network. A neuron receives a set of inputs (<span class="math inline">\(x_i\)</span>), weights (<span class="math inline">\(w_i\)</span>) and sums them, while adding a bias term (<span class="math inline">\(b\)</span>). These <strong>weights</strong> and <strong>biases</strong> are adjustable parameters that the network learns during <strong>training</strong>.</p>
+<p><span class="math display">\[
+\Large y = w_1x_1 + w_2x_2 + b
+\]</span></p>
+<p>Another important part of a neuron is called the <strong>activation</strong>. The output of the weighted sum (<span class="math inline">\(y\)</span>) is passed through an activation function, which determines the strength of the output and whether the neuron becomes activated or not.</p>
+<div id="fig-neuron" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-neuron-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/neuron.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-neuron-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Components of a Neuron
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There are many activation functions, and you are encouraged to resarch which one would be best for your specific use case.</p>
+</div>
+</div>
+</section>
+<section id="the-prediction---feedback-loop" class="level3">
+<h3 class="anchored" data-anchor-id="the-prediction---feedback-loop">The Prediction - Feedback Loop</h3>
+<p>The <strong>prediction-feedback loop</strong> is what makes <strong>learning</strong> possible as a deep learning model doesn’t just memorize the data, it adapts and generalizes to it. This allows a model to fine-tune how it <em>sees</em> the input <strong>data</strong> to improve its performace based on the <strong>goal</strong> and the <strong>task</strong>.</p>
+<div id="fig-feedback-loop" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-feedback-loop-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/feedbackloop.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-feedback-loop-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Prediction-Feedback Loop
+</figcaption>
+</figure>
+</div>
+<p>This prediction–feedback loop is driven by the goal of the <strong>loss function</strong>, which guides the model in adjusting its weights and biases to find the optimal solution. The loss function assesses the difference between the true and predicted <strong>labels</strong>, typically, with the goal to minimize the error between the two. There are different types of loss functions, each providing different feedback to the model. Choosing a loss function depends on the task (e.g., classification, regression), and ensuring that it is appropriate for the problem is a crucial step.</p>
+<p>Over a number of iterations, or <strong>epochs</strong>, the model adjusts its weights and biases based on the feedback received from the loss function. Eventually, the model can no longer improve given the input data, and at this point, the loss begins to stabilize, indicating that the model has reached its optimal performance.</p>
+<div id="fig-epochs" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-epochs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/epochs.gif" class="img-fluid quarto-figure quarto-figure-center figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-epochs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Model Adjusting Over Epochs
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="image-based-vs.-point-based-deep-learning" class="level3">
+<h3 class="anchored" data-anchor-id="image-based-vs.-point-based-deep-learning">Image Based vs.&nbsp;Point Based Deep Learning</h3>
+</section>
+</section>
+<section id="challenges-with-deep-learning" class="level2">
+<h2 class="anchored" data-anchor-id="challenges-with-deep-learning">Challenges with Deep Learning</h2>
+<section id="implemented-in-python" class="level3">
+<h3 class="anchored" data-anchor-id="implemented-in-python">Implemented in Python</h3>
+</section>
+<section id="many-models-use-linux" class="level3">
+<h3 class="anchored" data-anchor-id="many-models-use-linux">Many Models Use Linux</h3>
+</section>
 </section>
 <section id="frequently-asked-questions" class="level2">
 <h2 class="anchored" data-anchor-id="frequently-asked-questions">Frequently Asked Questions</h2>
@@ -201,6 +334,17 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="when-should-a-deep-learning-model-be-used" class="level3">
 <h3 class="anchored" data-anchor-id="when-should-a-deep-learning-model-be-used">When should a deep learning model be used?</h3>
+<p>As the complexity of the data or the task increases deep learning becomes a more benifical option. Raw lidar data for example is a complex dataset and is well suited for deep learning tasks.</p>
+<div id="fig-deeplearning-complexity" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-deeplearning-complexity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/dlcomplexity.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:40.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-deeplearning-complexity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Data and Task Complexity for Deep and Machine Learning
+</figcaption>
+</figure>
+</div>
 </section>
 <section id="what-computing-resources-are-required-to-run-a-deep-learning-model" class="level3">
 <h3 class="anchored" data-anchor-id="what-computing-resources-are-required-to-run-a-deep-learning-model">What computing resources are required to run a deep learning model?</h3>
