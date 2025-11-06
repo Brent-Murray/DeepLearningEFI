@@ -1,22 +1,24 @@
 ```css
-.figure {
-  text-align: center;
-}
+.figure { 
+    text-align: center; 
+} 
 
-.figure-caption {
-  text-align: center;
-  font-style: italic;
-}
+.figure-caption { 
+    text-align: center; 
+    font-style: italic; 
+} 
 
-.quarto-figure {
-  text-align: center !important;
-}
+.quarto-figure { 
+    text-align: center !important; 
+    margin-top: 2em;
+    margin-bottom: 2em;
+} 
 
-.quarto-figure figcaption,
-figure > figcaption {
-  text-align: center !important;
-  margin-top: 0.5em;
-  font-style: italic;
-  display: block;
+.quarto-figure figcaption, 
+figure > figcaption { 
+    text-align: center !important; 
+    margin-top: 0.5em; 
+    font-style: italic; 
+    display: block; 
 }
 ```

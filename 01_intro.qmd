@@ -8,7 +8,7 @@ format:
 <a href="https://www.deeplearningbook.org/" target="_blank">The Deep Learning Book</a>
 
 ## What is Deep Learning?
-Deep learning is a branch of machine learning, and both are forms of artificial intelligence (AI). **AI** refers to methods that enable machines to mimic human behavior. **Machine learning** is a subset of AI that uses statistical techniques to allow machines to improve their performance through experience, while **deep learning** is a subset of machine learning that enables the computation of multi-layered neural networks. A neural network is a term that is used interchangably with deep learning and we will use them both throughout this workshop.
+Deep learning is a branch of machine learning, and both are forms of artificial intelligence (AI). **AI** refers to methods that enable machines to mimic human behavior. **Machine learning** is a subset of AI that uses statistical techniques to allow machines to improve their performance through experience, while **deep learning** is a subset of machine learning that enables the computation of multi-layered neural networks. A neural network is a term that is used interchangeably with deep learning and we will use them both throughout this workshop.
 
 ![Different Types of Artificial Intelligence and Common Examples of Each](images/aivendiagram.png){#fig-ai-vendiagram fig-align="center" width=50%}
 
@@ -28,11 +28,11 @@ Another important part of a neuron is called the **activation**. The output of t
 ![Components of a Neuron](images/neuron.png){#fig-neuron fig-align="center" width=60%}
 
 ::: callout-note
-There are many activation functions, and you are encouraged to resarch which one would be best for your specific use case. 
+There are many activation functions, and you are encouraged to research which one would be best for your specific use case.
 :::
 
 ### The Prediction - Feedback Loop
-The **prediction-feedback loop** is what makes **learning** possible as a deep learning model doesn't just memorize the data, it adapts and generalizes to it. This allows a model to fine-tune how it *sees* the input **data** to improve its performace based on the **goal** and the **task**.
+The **prediction-feedback loop** is what makes **learning** possible as a deep learning model doesn't just memorize the data, it adapts and generalizes to it. This allows a model to fine-tune how it *sees* the input **data** to improve its performance based on the **goal** and the **task**.
 
 ![Prediction-Feedback Loop](images/feedbackloop.png){#fig-feedback-loop fig-align="center" width=60%}
 
@@ -42,7 +42,29 @@ Over a number of iterations, or **epochs**, the model adjusts its weights and bi
 
 ![Model Adjusting Over Epochs](images/epochs.gif){#fig-epochs fig-align="center"}
 
-### Image Based vs. Point Based Deep Learning
+This iterative adjustment process is called model training and involves a **training** and a separate **validation** dataset. The training dataset is used to teach the model by updating its parameters, while the validation dataset assesses how well the model generalizes to unseen data. Monitoring performance on the validation set helps to detect **overfitting** (when a model learns the training data too closely and fails to perform well on new inputs) ensuring the final model remains both accurate and robust. We can monitor this using **loss curves** as seen in @fig-epochs ensuring that the loss continues to drop for both the training and validation datasets.
+
+After the prediction-feedback loop (training and validation), a **testing** dataset is used to provide an unbiased evaluation of the model’s final performance. Unlike the validation set, which guides the model tuning during training, the test set is completely withheld until all adjustments are complete. This ensures that the performance metrics reflect how the model will behave on truly unseen data, offering a realistic measure of its generalization ability and reliability for real-world applications.
+
+::: callout-note
+It is crucial that these three separate and distinct datasets (training, validation, and testing) are generated for training deep learning models. Mixing or reusing data between these datasets can lead to misleading performance metrics and poor generalization. Proper separation ensures that the model is evaluated fairly at each stage of development and that its reported accuracy truly reflects performance on new, unseen data.
+:::
+
+## Image-Based vs. Point-Based Deep Learning
+### Image-Based Deep Learning
+**Image-based** deep learning is a computer vision method that teaches computers to understand and interpret images. Instead of manually telling the computer what to look for, these algorithms automatically learn patterns from large sets of images. These algorithms can learn features like edges, shapes, and colours, and eventually can identify complex objects such as trees. Because these models learn directly from the data, they can help computers *see* and make sense of the imagery.
+
+![Image Based Deep Learning](images/imagedl.png){#fig-imagedl fig-align="center" width=80%}
+
+A common image-based deep learning technique is the **convolutional neural network (CNN)**. CNNs use filters (also called kernels) that slide across an image to detect important visual features. These filters help the network to focus on local patterns while keeping track of the spatial relationships in the image. As the data moves through the different layers of the network, the CNN learns increasingly complex patterns. 
+
+![Convolutional Neural Networks](images/convolutions.png){#fig-convolutions fig-align="center" width=60%}
+
+### Point Based Deep Learning
+**Point-based** deep learning is a method used to analyze 3D data point clouds. Unlike image data, which is structured in a grid of pixels, point clouds are irregular and unorganized, making them harder for traditional neural networks to process. Point-based deep learning models are designed to handle this challenge by directly learning from the spatial relationships between points without needing to convert them into images or grids. By learning the geometric patterns directly from the raw point clouds, these models are able to provide an accurate and detailed understanding of complex 3D structures of the forest. Similar to image-based approaches as the data moves through the different layers different and more complex patterns can be extracted.
+
+![Point Based Deep Learning](images/pointdl.png){#fig-pointdl fig-align="center" width=80%}
+
 
 ## Challenges with Deep Learning
 
