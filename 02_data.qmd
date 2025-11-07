@@ -7,19 +7,25 @@ execute:
   echo: true
 ---
 
-![](https://opendata.nfis.org/mapserver/PRF_Layout.jpg){fig-alt="Petawawa Forest Map" caption="" width="60%"}
+![](https://opendata.nfis.org/mapserver/PRF_Layout.jpg){fig-alt="Petawawa Forest Map" caption="" width="80%"}
 
-## Relevant Resources
+This section will provide preprocessing code to prepare LiDAR and sample plot data for subsequent point cloud deep learning model development.
 
-## Data download
+## Dataset Background
 
-PRF 2018 sample plots have a 14.1 m radius (625 m^2^)
+The Petawawa Resereach Forest (PRF) is the oldest research forest in Canada, established in 1918. It is a remote sensing supersite and is part of the [GEO-TREES](https://geo-trees.org/) network.
 
-The preprocessed data folder can be downloaded here
+In this workshop we make use of enhanced forest inventory sample plots collected in the PRF in 2018. We are also using single photon airborne laser scanning (ALS) data also collected in 2018.
+
+The sample plots have a 14.1 m radius (625 m^2^).
+
+The ALS data has a mean point density of 35 points/m^2^.
+
+**The preprocessed data can be downloaded here:**
 
 [https://ln5.sync.com/dl/88a6f5dd0#u24mrtkh-d5dqhart-zrg42shx-jfhhk8u5](https://ln5.sync.com/dl/88a6f5dd0#u24mrtkh-d5dqhart-zrg42shx-jfhhk8u5)
 
-The original height normalized LiDAR and sample plot data for the PRF can be downloaded below:
+**The original height normalized ALS and sample plot data for the PRF can be downloaded from:**
 
 SPL LiDAR: [https://opendata.nfis.org/downloads/petawawa/Raster/LiDAR_2018/PRF_benchmarking_harmonized_2018_ALS.zip](https://opendata.nfis.org/downloads/petawawa/Raster/LiDAR_2018/PRF_benchmarking_harmonized_2018_ALS.zip)
 
@@ -29,15 +35,16 @@ Field Plots: [https://opendata.nfis.org/downloads/petawawa/Vector/Forest%20Sampl
 
 1) Extract ALS point clouds corresponding to ground reference plots
 
-2) Normalize X and Y coordinates
+2) Denoise point clouds and normalize X and Y coordinates
 
-3) Compare 95th height percentile of measured tree heights with ALS derived 95th height percentile
+3) Export point clouds to numpy files for later use in model development
 
-4) Derive point cloud "labels", establishing which plots are coniferous/deciduous/mixed
+4) Compare 95th height percentile of measured tree heights with ALS derived 95th height percentile
 
-5) Split the data into training, validation, and test sets (i.e., splits)
+5) Derive sample plot "labels", establishing which plots are coniferous/deciduous/mixed
 
-6) Export point clouds to numpy files for later processing
+6) Split the data into training, validation, and test sets (i.e., splits)
+
 
 ## Extract LiDAR point clouds using the lidR package
 
@@ -80,7 +87,7 @@ library(ggplot2)
 library(plotly)
 library(reticulate)
 
-# Import python numpy module using reticulate in quarto
+# Import python numpy module using reticulate
 np <- reticulate::import("numpy")
 
 ```
