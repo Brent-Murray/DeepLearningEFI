@@ -365,9 +365,9 @@ Divide data into training, validation, and testing
 ````{r}
 
 # Establish the number of samples per split
-n_test <- round(nrow(perc_decid_df) * 0.20, 0)
+n_test <- round(nrow(perc_decid_df) * 0.15, 0)
 
-n_train <-  round(nrow(perc_decid_df) * 0.60, 0)
+n_train <-  round(nrow(perc_decid_df) * 0.70, 0)
 
 set.seed(14)
 test_df <- perc_decid_df %>%
