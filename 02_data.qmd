@@ -320,6 +320,8 @@ Classify each plot as either dominated by coniferous or deciduous species.
 
 ````{r}
 
+DOMINANCE_PERC_THRESH <- 70
+
 get_tvol_d_perc <- function(trees){
 
   decid_tvol <- trees %>% 
@@ -350,13 +352,15 @@ for(plot_id_i in unique(trees_df$plot_id)){
 # Assing plot to be either coniferous or deciduous dominant
 perc_decid_df <- data.frame(plot_id = unique(trees_df$plot_id),
                             perc_decid = perc_d_vec) %>%
-                  mutate(dom_sp_type = if_else(perc_decid > 75, 'decid', 
-                                       if_else(perc_decid > 25 , 'mixed', 'conif')))
+                  mutate(dom_sp_type = if_else(perc_decid > DOMINANCE_PERC_THRESH, 'decid', 
+                                       if_else(perc_decid > (100 - DOMINANCE_PERC_THRESH) , 'mixed', 'conif')))
 
 
 hist(perc_decid_df$perc_decid)
 
 head(perc_decid_df)
+
+table(perc_decid_df$dom_sp_type)
 
 ````
 
