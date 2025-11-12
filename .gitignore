@@ -6,3 +6,9 @@
 /data
 
 **/*.quarto_ipynb
+
+# Python env stuff
+/.venv/
+pyproject.toml
+.python-version
+uv.lock
