@@ -4,27 +4,19 @@ project:
   execute-dir: project
 
 website:
-  title: "Deep Learning for Forest Inventories"
-  description: "Workshop on deep learning applications for enhanced forest inventories"
-  favicon: "images/TreeNetwork.png"
+  title: "Yukon Inventory"
+  description: "Central resource for the Multi-Scale Biomass Mapping and Timber Assessment in the Yukon Territory project"
+  favicon: "images/logos/irss.png"
   site-url: https://Brent-Murray.github.io/DeepLearningEFI/
-  repo-url: https://github.com/Brent-Murray/DeepLearningEFI
+  repo-url: https://github.com/Brent-Murray/yukon-processing
   repo-actions: [issue]
   navbar:
-    logo: "images/TreeNetwork.png"
+    logo: "images/logos/irss.png"
     left:
       - text: Home
         href: index.qmd
-      - text: 1-Intro
-        href: 01_intro.qmd
-      - text: 2-Data
-        href: 02_data.qmd
-      - text: 3-Train
-        href: 03_train.qmd
-      - text: 4-Evaluation
-        href: 04_evaluation.qmd
-      - text: 5-Examples
-        href: 05_examples.qmd
+      - text: Plots
+        href: 01_plot_generation.qmd
 numbering: true
 
 crossref:

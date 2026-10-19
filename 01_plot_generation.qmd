@@ -1,0 +1,779 @@
+---
+title: "Plot Generation and Tree Summaries"
+format:
+  html:
+    toc: true
+execute:
+  echo: true
+  eval: false
+---
+
+This tutorial demonstrates how to convert field plot coordinates into a spatial dataset and derive plot-level forest inventory attributes from individual-tree measurements using R. It follows the workflow in `plot_generation.R`, including coordinate transformation, tree biomass and volume estimation, plot summaries, and spatial data export.
+
+::: callout-note
+The example uses a 400 m² (0.04 ha) plot area and WGS 84 geographic coordinates transformed to UTM Zone 8N. Adjust these values to match your field dataset before running the workflow.
+:::
+
+## Relevant Resources
+
+The workflow uses the `sf`, `dplyr`, and `readr` R packages. For additional information, see the [sf documentation](https://r-spatial.github.io/sf/), [dplyr documentation](https://dplyr.tidyverse.org/), and [readr documentation](https://readr.tidyverse.org/).
+
+## Dataset Background
+
+The example in `plot_generation.R` uses a CSV named `2026_Nahanni_LiDAR_Calibration_Plots.csv`. This file supplies plot coordinates and individual-tree records, including plot identifiers, species, diameter at breast height (DBH), and tree height. The script uses the same CSV for both plot locations and tree measurements, although the functions also accept separate CSV files.
+
+**Required input fields**
+
+| Field | Example column | Description |
+|---|---|---|
+| Plot identifier | `Plot ID` | Identifies the plot associated with each tree |
+| Longitude | `Longitude` | Plot x-coordinate in the input CRS |
+| Latitude | `Latitude` | Plot y-coordinate in the input CRS |
+| DBH | `DBH (cm)` | Individual-tree diameter at breast height |
+| Height | `Height (m)` | Individual-tree height |
+| Species | `Species` | Species code used to select allometric coefficients |
+
+## Summary of Processing Steps
+
+1. Install and load required R packages.
+2. Define species-specific volume and biomass coefficients.
+3. Calculate above-ground biomass and stem volume for individual trees.
+4. Convert plot coordinates from a CSV to spatial points and transform their coordinate reference system.
+5. Summarize tree measurements and calculated attributes by plot.
+6. Join the summaries to the plot locations and export shapefiles.
+
+## 1) Packages
+
+The script checks for required packages, installs missing packages, and loads them.
+
+```{r}
+#| code-fold: true
+
+pkgs <- c(
+  "sf",
+  "dplyr",
+  "readr"
+)
+
+# Install required packages if not already done
+for (p in pkgs) {
+  if (!requireNamespace(p, quietly = TRUE)) {
+    install.packages(p)
+  }
+}
+```
+```{r}
+#| code-fold: false
+
+library(sf)
+library(dplyr)
+library(readr)
+```
+
+## 2) Volume and Biomass Coefficients
+
+Species-specific allometric equations are used to estimate tree volume and above-ground biomass from DBH and height.
+
+### Tree volume
+
+The volume equation is:
+
+$$
+V = b_0 + b_1 \times DBH^{b_2} \times H^{b_3}
+$$
+
+where $V$ is tree volume in cubic metres, $DBH$ is diameter at breast height in centimetres, $H$ is tree height in metres, and $b_0$–$b_3$ are coefficients selected by species.
+
+### Above-ground biomass
+
+Above-ground biomass is calculated separately for wood, bark, branches, and foliage:
+
+$$
+AGB_c = b_1 \times DBH^{b_2} \times H^{b_3}
+$$
+
+The total tree above-ground biomass is the sum of the four components:
+
+$$
+AGB_{tree} = AGB_{wood} + AGB_{bark} + AGB_{branches} + AGB_{foliage}
+$$
+
+The coefficients below are taken directly from `plot_generation.R`. They include species-specific and broader softwood/hardwood groups. The script does not automatically assign an unmatched species to a broader group; the species value must match an available coefficient name.
+
+```{r}
+#| code-fold: true
+
+volume_coeffs <- list(
+
+  Sw = c(
+    b0 = 0.04316,
+    b1 = 3.1526e-5,
+    b2 = 2,
+    b3 = 1
+  ),
+
+  Sb = c(
+    b0 = 0.00432,
+    b1 = 3.5718e-5,
+    b2 = 2,
+    b3 = 1
+  ),
+
+  At = c(
+    b0 = 0.04591,
+    b1 = 3.1133e-5,
+    b2 = 2,
+    b3 = 1
+  ),
+
+  Pl = c(
+    b0 = 0,
+    b1 = 4.421585e-5,
+    b2 = 1.926909,
+    b3 = 1.00304
+  ),
+
+  Bw = c(
+    b0 = 0,
+    b1 = 5.634793e-5,
+    b2 = 1.976455,
+    b3 = 0.803794
+  ),
+
+  All_softwoods = c(
+    b0 = 0,
+    b1 = 4.5e-5,
+    b2 = 1.95,
+    b3 = 1
+  ),
+
+  All_hardwoods = c(
+    b0 = 0,
+    b1 = 5.5e-5,
+    b2 = 1.95,
+    b3 = 0.9
+  )
+)
+
+
+# -------------------------------------------------------------------------
+# Biomass coefficients
+# -------------------------------------------------------------------------
+#
+# Biomass equation:
+#
+# Biomass = b1 * DBH^b2 * Height^b3
+#
+# Wood, bark, branch, and foliage biomass are calculated separately
+# and then summed to obtain total above-ground biomass.
+#
+
+biomass_coeffs <- list(
+
+  Pl = list(
+    wood     = c(0.0239, 1.6827, 1.1878),
+    bark     = c(0.0117, 1.6398, 0.6524),
+    branches = c(0.0285, 3.3764, -1.4395),
+    foliage  = c(0.0769, 2.6834, -1.2484)
+  ),
+
+  Sw = list(
+    wood     = c(0.0252, 1.7819, 1.0022),
+    bark     = c(0.0096, 1.6901, 0.7393),
+    branches = c(0.0322, 2.8961, -0.9203),
+    foliage  = c(0.1832, 2.4144, -1.0948)
+  ),
+
+  Sb = list(
+    wood     = c(0.0335, 1.7389, 0.9835),
+    bark     = c(0.0132, 1.7657, 0.5775),
+    branches = c(0.0405, 3.1917, -1.3674),
+    foliage  = c(0.2078, 2.5517, -1.3453)
+  ),
+
+  At = list(
+    wood     = c(0.0143, 1.9369, 1.0579),
+    bark     = c(0.0063, 2.0744, 0.6691),
+    branches = c(0.0150, 2.9068, -0.6306),
+    foliage  = c(0.0284, 1.6020, 0.0)
+  ),
+
+  Bw = list(
+    wood     = c(0.0333, 2.0794, 0.6811),
+    bark     = c(0.0079, 1.9905, 0.6553),
+    branches = c(0.0253, 3.1518, -0.9083),
+    foliage  = c(0.1361, 2.2978, -1.0934)
+  ),
+
+  Subalpine_fir = list(
+    wood     = c(0.0220, 1.6469, 1.1714),
+    bark     = c(0.0061, 1.8603, 0.7693),
+    branches = c(0.0265, 3.6747, -1.5958),
+    foliage  = c(0.0509, 2.9909, -1.2271)
+  ),
+
+  Red_alder_cottonwood = list(
+    wood     = c(0.0051, 1.0697, 2.2748),
+    bark     = c(0.0009, 1.3061, 2.0109),
+    branches = c(0.0131, 2.5760, 0.0),
+    foliage  = c(0.0224, 1.8368, 0.0)
+  ),
+
+  All_softwoods = list(
+    wood     = c(0.0276, 1.6868, 1.0953),
+    bark     = c(0.0101, 1.8486, 0.5525),
+    branches = c(0.0313, 2.9974, -1.0383),
+    foliage  = c(0.1379, 2.3981, -1.0418)
+  ),
+
+  All_hardwoods = list(
+    wood     = c(0.0353, 2.0249, 0.7048),
+    bark     = c(0.0090, 1.8677, 0.7144),
+    branches = c(0.0448, 2.6855, -0.5911),
+    foliage  = c(0.0869, 1.8541, -0.5491)
+  )
+)
+```
+
+## 3) Individual-Tree Biomass and Volume Functions
+
+### Calculate above-ground biomass
+
+The `calc_agb()` function selects the biomass coefficients associated with the supplied species, calculates biomass for each tree component, and sums the components. It returns `NA` if species is missing or unsupported, or if DBH or height is missing or non-positive.
+
+```{r}
+#| code-fold: true
+
+calc_agb <- function(species, dbh, height) {
+
+  # Return NA if species or tree measurements are invalid
+  if (
+    is.na(species) ||
+    is.na(dbh) ||
+    is.na(height) ||
+    dbh <= 0 ||
+    height <= 0 ||
+    !(species %in% names(biomass_coeffs))
+  ) {
+    return(NA_real_)
+  }
+
+  # Get biomass coefficients for the specified species
+  species_coeffs <- biomass_coeffs[[species]]
+
+  # Calculate biomass for each tree component and sum the components
+  agb <- sum(
+    vapply(
+      species_coeffs,
+      function(x) {
+
+        b1 <- x[1]
+        b2 <- x[2]
+        b3 <- x[3]
+
+        b1 * dbh^b2 * height^b3
+      },
+      numeric(1)
+    )
+  )
+
+  return(agb)
+}
+```
+
+### Calculate tree volume
+
+The `calc_volume()` function uses the corresponding species coefficients to estimate individual-tree volume. It applies the same input validity checks as the biomass function.
+
+```{r}
+#| code-fold: true
+
+calc_volume <- function(species, dbh, height) {
+
+  # Return NA if species or tree measurements are invalid
+  if (
+    is.na(species) ||
+    is.na(dbh) ||
+    is.na(height) ||
+    dbh <= 0 ||
+    height <= 0 ||
+    !(species %in% names(volume_coeffs))
+  ) {
+    return(NA_real_)
+  }
+
+  # Get volume coefficients for the specified species
+  coefs <- volume_coeffs[[species]]
+
+  # Calculate individual-tree volume
+  volume <- coefs["b0"] +
+    coefs["b1"] *
+    dbh^coefs["b2"] *
+    height^coefs["b3"]
+
+  return(as.numeric(volume))
+}
+```
+
+## 4) Convert Plot Coordinates to Spatial Points
+
+The `csv_to_shp()` function reads plot coordinates from a CSV, verifies the required columns, and creates an `sf` point layer.
+
+If a plot identifier is provided, records with the same plot ID are grouped and their mean longitude and latitude are used to create a single point. The coordinates are then transformed from the input CRS to the output CRS and saved as an ESRI Shapefile.
+
+::: callout-note
+The script averages duplicate coordinates in the input coordinate system before transforming them. This is intended for repeated records representing the same plot, rather than distinct sampling locations.
+:::
+
+```{r}
+#| code-fold: true
+
+csv_to_shp <- function(
+    csv_path,                  # Path to the input CSV containing coordinates
+    output_shp,                # Path for the output shapefile
+    x_col = "longitude",       # Name of the x-coordinate column
+    y_col = "latitude",        # Name of the y-coordinate column
+    plot_id = NULL,            # Optional plot ID column used to group duplicate plots
+    input_crs,                 # CRS of the coordinates in the CSV
+    output_crs                 # CRS for the output spatial layer
+) {
+
+  # Read the CSV file
+  df <- readr::read_csv(
+    csv_path,
+    show_col_types = FALSE
+  )
+
+  # Check that the coordinate columns exist
+  required <- c(x_col, y_col)
+
+  # If a plot ID is provided, also check that it exists
+  if (!is.null(plot_id)) {
+    required <- c(required, plot_id)
+  }
+
+  missing <- setdiff(required, names(df))
+
+  # Stop if any required columns are missing
+  if (length(missing) > 0) {
+    stop(
+      paste0(
+        "Missing required columns: ",
+        paste(missing, collapse = ", "),
+        "\nCheck that x_col = '", x_col,
+        "' and y_col = '", y_col, "'",
+        if (!is.null(plot_id)) {
+          paste0(" and plot_id = '", plot_id, "'")
+        } else {
+          ""
+        },
+        " match the column names in the CSV."
+      )
+    )
+  }
+
+  # If a plot ID column is supplied, group duplicate plot IDs
+  # and calculate the mean x and y coordinates for each plot
+  if (!is.null(plot_id)) {
+
+    df <- df |>
+      dplyr::group_by(.data[[plot_id]]) |>
+      dplyr::summarise(
+        "{x_col}" := mean(.data[[x_col]], na.rm = TRUE),
+        "{y_col}" := mean(.data[[y_col]], na.rm = TRUE),
+        .groups = "drop"
+      )
+  }
+
+  # Convert the data frame to an sf spatial point layer
+  out <- sf::st_as_sf(
+    df,
+    coords = c(x_col, y_col),
+    crs = input_crs,
+    remove = FALSE
+  )
+
+  # Transform the points to the desired output CRS
+  out <- sf::st_transform(
+    out,
+    crs = output_crs
+  )
+
+  # Save the spatial layer as an ESRI Shapefile
+  sf::st_write(
+    out,
+    output_shp,
+    driver = "ESRI Shapefile",
+    delete_layer = TRUE,
+    quiet = TRUE
+  )
+
+  # Return the spatial layer for continued use in R
+  return(out)
+}
+```
+
+## 5) Summarize Individual-Tree Measurements by Plot
+
+The `summarize_plots()` function reads the tree CSV, checks the required fields, and standardizes species code capitalization (for example, `SW` or `sw` becomes `Sw`).
+
+It then calculates biomass and volume for every tree before grouping the records by plot ID. For each plot, the script calculates:
+
+- Number of recorded trees (`n_trees`)
+- Mean, minimum, and maximum DBH (`dbh_mean`, `dbh_min`, `dbh_max`)
+- Mean, minimum, and maximum height (`ht_mean`, `ht_min`, `ht_max`)
+- Tree density in trees per hectare (`density_tpha`)
+- Above-ground biomass in tonnes per hectare (`agb_t_ha`)
+- Volume in cubic metres per hectare (`vlm_m3_ha`)
+
+### Convert totals to per-hectare estimates
+
+With plot area $A$ expressed in hectares, the conversions are:
+
+$$
+Density = \frac{n_{trees}}{A}
+$$
+
+$$
+AGB_{t/ha} = \frac{AGB_{kg}}{1000 \times A}
+$$
+
+$$
+Volume_{m^3/ha} = \frac{Volume_{m^3}}{A}
+$$
+
+For the example 400 m² plots, $A = 0.04$ ha.
+
+::: callout-note
+The script counts all records in `n_trees`, uses `na.rm = TRUE` when summarizing measurements and calculated biomass/volume, and does not include a separate quality-control or missing-data filtering stage. Review the input measurements and species codes before interpreting the resulting estimates.
+:::
+
+```{r}
+#| code-fold: true
+
+summarize_plots <- function(
+    tree_csv,                  # Path to CSV containing individual tree records
+    plot_id = "nfm_id",        # Column identifying the plot for each tree
+    dbh_col = "dbh",           # Column containing DBH measurements
+    height_col = "height",     # Column containing tree height measurements
+    species_col = "species",   # Column containing species information
+    plot_area_ha = 0.04        # Plot area in hectares
+) {
+
+  # Read the individual tree data
+  trees <- readr::read_csv(
+    tree_csv,
+    show_col_types = FALSE
+  )
+
+  # Check that all required columns exist in the tree data
+  required <- c(
+    plot_id,
+    dbh_col,
+    height_col,
+    species_col
+  )
+
+  missing <- setdiff(required, names(trees))
+
+  # Stop if any required columns are missing
+  if (length(missing) > 0) {
+    stop(
+      paste0(
+        "Missing required columns: ",
+        paste(missing, collapse = ", "),
+        "\nCheck that plot_id = '", plot_id,
+        "', dbh_col = '", dbh_col,
+        "', height_col = '", height_col,
+        "', and species_col = '", species_col,
+        "' match the column names in the CSV."
+      )
+    )
+  }
+
+
+  # -----------------------------------------------------------------------
+  # Standardize species codes
+  # -----------------------------------------------------------------------
+  #
+  # Converts species codes to consistent capitalization so that
+  # differences in capitalization do not affect coefficient matching.
+  #
+  # Examples:
+  #   "SW" -> "Sw"
+  #   "sw" -> "Sw"
+  #   "PL" -> "Pl"
+  #   "AT" -> "At"
+  #
+
+  trees <- trees |>
+    dplyr::mutate(
+      "{species_col}" := paste0(
+        toupper(substr(.data[[species_col]], 1, 1)),
+        tolower(substr(
+          .data[[species_col]],
+          2,
+          nchar(.data[[species_col]])
+        ))
+      )
+    )
+
+
+  # -----------------------------------------------------------------------
+  # Calculate biomass and volume for each individual tree
+  # -----------------------------------------------------------------------
+
+  trees <- trees |>
+    dplyr::rowwise() |>
+    dplyr::mutate(
+
+      # Above-ground biomass in kilograms
+      AGB_kg = calc_agb(
+        species = .data[[species_col]],
+        dbh = .data[[dbh_col]],
+        height = .data[[height_col]]
+      ),
+
+      # Tree volume in cubic metres
+      Volume_m3 = calc_volume(
+        species = .data[[species_col]],
+        dbh = .data[[dbh_col]],
+        height = .data[[height_col]]
+      )
+    ) |>
+    dplyr::ungroup()
+
+
+  # -----------------------------------------------------------------------
+  # Group trees by plot and calculate plot-level summaries
+  # -----------------------------------------------------------------------
+
+  summary <- trees |>
+
+    # Group all trees belonging to the same plot
+    dplyr::group_by(.data[[plot_id]]) |>
+
+    # Calculate summary statistics for each plot
+    dplyr::summarise(
+
+      # Number of trees measured in the plot
+      n_trees = dplyr::n(),
+
+      # DBH summary statistics
+      dbh_mean = mean(.data[[dbh_col]], na.rm = TRUE),
+      dbh_min  = min(.data[[dbh_col]], na.rm = TRUE),
+      dbh_max  = max(.data[[dbh_col]], na.rm = TRUE),
+
+      # Height summary statistics
+      ht_mean = mean(.data[[height_col]], na.rm = TRUE),
+      ht_min  = min(.data[[height_col]], na.rm = TRUE),
+      ht_max  = max(.data[[height_col]], na.rm = TRUE),
+
+      # Total above-ground biomass in the plot (kg)
+      agb_kg = sum(
+        AGB_kg,
+        na.rm = TRUE
+      ),
+
+      # Total tree volume in the plot (m3)
+      volume_m3 = sum(
+        Volume_m3,
+        na.rm = TRUE
+      ),
+
+      # Remove grouping after summarising
+      .groups = "drop"
+    ) |>
+
+    # ---------------------------------------------------------------------
+    # Convert plot-level totals to per-hectare values
+    # ---------------------------------------------------------------------
+
+    dplyr::mutate(
+
+      # Trees per hectare
+      density_tpha =
+        n_trees / plot_area_ha,
+
+      # Above-ground biomass in tonnes per hectare
+      agb_t_ha =
+        (agb_kg / 1000) /
+        plot_area_ha,
+
+      # Volume in cubic metres per hectare
+      vlm_m3_ha =
+        volume_m3 /
+        plot_area_ha
+    ) |>
+
+    # Remove intermediate plot totals
+    dplyr::select(
+      -agb_kg,
+      -volume_m3
+    )
+
+  # Return one row per plot containing the calculated summaries
+  return(summary)
+}
+```
+
+## 6) Filepaths and User Inputs
+
+Update the filepaths, field names, coordinate reference systems, and plot area for your dataset.
+
+The example uses:
+
+- **Input CRS:** EPSG:4326 (WGS 84 longitude/latitude)
+- **Output CRS:** EPSG:32608 (WGS 84 / UTM Zone 8N)
+- **Plot area:** 0.04 ha (400 m²)
+
+The script creates an intermediate plot-location shapefile (`plots.shp`) and a final shapefile with tree summaries (`plots_summary.shp`).
+
+```{r}
+#| code-fold: false
+
+plot_csv <- "F:\\yukon\\plot_generation\\2026_Nahanni_LiDAR_Calibration_Plots.csv"
+
+# Tree CSV containing individual tree measurements
+tree_csv <- "F:\\yukon\\plot_generation\\2026_Nahanni_LiDAR_Calibration_Plots.csv"
+
+# Intermediate shapefile containing only plot locations
+plot_shp <- "F:\\yukon\\plot_generation\\plots.shp"
+
+# Final shapefile containing plot locations + tree summaries
+output_shp <- "F:\\yukon\\plot_generation\\plots_summary.shp"
+
+
+# -------------------------------------------------------------------------
+# Column names
+# -------------------------------------------------------------------------
+
+# Coordinate columns
+x_col <- "Longitude"
+y_col <- "Latitude"
+
+# Column identifying each plot
+plot_id <- "Plot ID"
+
+# Individual tree columns
+dbh_col <- "DBH (cm)"
+height_col <- "Height (m)"
+
+# Species column
+#
+# Values in this column must correspond to names in the biomass
+# and volume coefficient lists (e.g., Sw, Sb, At, Pl, Bw).
+species_col <- "Species"
+
+
+# -------------------------------------------------------------------------
+# Coordinate reference systems
+# -------------------------------------------------------------------------
+#
+# EPSG:4326 = WGS84 latitude/longitude
+# EPSG:32608 = WGS84 / UTM Zone 8N
+#
+
+input_crs <- 4326
+output_crs <- 32608
+
+
+# -------------------------------------------------------------------------
+# Plot area in hectares
+# -------------------------------------------------------------------------
+#
+# 400 m2 plot = 0.04 ha
+#
+
+plot_area_ha <- 0.04
+```
+
+## 7) Run the Plot Generation Workflow
+
+### Create the spatial plot layer
+
+First, convert the CSV coordinates to a spatial point layer. Duplicate records sharing a plot ID are represented by one point using their mean coordinates.
+
+```{r}
+#| code-fold: false
+
+plots <- csv_to_shp(
+  csv_path = plot_csv,
+  output_shp = plot_shp,
+  x_col = x_col,
+  y_col = y_col,
+  plot_id = plot_id,
+  input_crs = input_crs,
+  output_crs = output_crs
+)
+```
+
+### Calculate plot-level attributes
+
+Next, calculate individual-tree biomass and volume and aggregate the results by plot.
+
+```{r}
+#| code-fold: false
+
+plot_summary <- summarize_plots(
+  tree_csv = tree_csv,
+  plot_id = plot_id,
+  dbh_col = dbh_col,
+  height_col = height_col,
+  species_col = species_col,
+  plot_area_ha = plot_area_ha
+)
+```
+
+### Join plot attributes to spatial locations
+
+The summaries are joined to the spatial point layer using the plot identifier. The `left_join()` retains the spatial plot records even if no matching tree summary is found.
+
+```{r}
+#| code-fold: false
+
+plots_summary <- plots |>
+  dplyr::left_join(
+    plot_summary,
+    by = plot_id
+  )
+```
+
+### Export the final shapefile
+
+Save the spatial layer with its plot-level attributes. The existing output layer is replaced when the script is rerun.
+
+```{r}
+#| code-fold: false
+
+sf::st_write(
+  plots_summary,
+  output_shp,
+  driver = "ESRI Shapefile",
+  delete_layer = TRUE,
+  quiet = TRUE
+)
+```
+
+### Inspect the results
+
+Print the final spatial layer to inspect the attributes and geometry.
+
+```{r}
+#| code-fold: false
+
+print(plots_summary)
+```
+
+## 8) Outputs
+
+The workflow produces two spatial datasets:
+
+| Output | Description |
+|---|---|
+| `plots.shp` | One spatial point per plot, derived from the CSV coordinates |
+| `plots_summary.shp` | Spatial plot points joined to DBH, height, tree count, density, biomass, and volume summaries |
+
+Both outputs are ESRI Shapefiles. Shapefile attribute names may be shortened because of format limitations; check the exported field names when using the results in subsequent analyses.
+
+The resulting plot-level dataset can be used as reference data for subsequent forest inventory and remote sensing analyses.

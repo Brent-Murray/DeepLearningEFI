@@ -1,53 +1,82 @@
 ---
-title: "Deep Learning with Airborne Laser Scanning Data for Forest Inventories"
-subtitle: "Tutorial"
+title: "Multi-Scale Biomass Mapping and Timber Assessment in the Yukon Territory"
+subtitle: "Project Resources and Tutorials"
 author:
   - name: "Brent Murray"
     affiliation: "University of British Columbia – Integrated Remote Sensing Studio"
-  - name: "Harry Seely"
+  - name: "Alec Kvarnstrom"
     affiliation: "University of British Columbia – Integrated Remote Sensing Studio"
-  - name: "Yuwei Cao"
-    affiliation: "University of British Columbia – Integrated Remote Sensing Studio"
-  - name: "Ahmed Ragab"
-    affiliation: "Natural Resources Canada - CanmetENERGY;<br>Polytechnique Montreal - Department of Mathematics and Industrial Engineering"
   - name: "Nicholas Coops"
     affiliation: "University of British Columbia – Integrated Remote Sensing Studio"
 format:
   html:
-    toc: True
+    toc: true
 ---
 
-<div style="display:flex; justify-content:center; align-items:center; gap:100px; margin:30px 0;">
-  <img src="images/logos/nrcan.jpg" style="height:70px; margin-right:40px;">
-  <img src="images/logos/ubc.jpg" style="height:70px; margin-right:40px;">
-  <img src="images/logos/polymtl.png" style="height:70px;">
+<div style="display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:60px; margin:30px 0;">
+  <img src="images/logos/ubc.jpg" alt="University of British Columbia logo" style="height:70px; max-width:100%; object-fit:contain;">
+  <img src="images/logos/irss_text.png" alt="Integrated Remote Sensing Studio logo" style="height:70px; max-width:100%; object-fit:contain;">
+  <img src="images/logos/yukon.png" alt="Government of Yukon logo" style="height:70px; max-width:100%; object-fit:contain;">
 </div>
 
 ## Overview
-This is an introductory workshop for deep learning techniques for Enhanced Forest Inventories (EFIs) presented at the Canadian Cross-Country EFI Checkup. This workshop covers a basic end-to-end deep learning workflow for EFI applications, covering an introduction into deep learning, to data preparation, and finally a demo of model training, evaluation, and deployment. There will also be some examples of real world forest inventory deep learning applications showcasing some of the possibilities there are with these techniques.
 
-### You will learn
-- What deep learning is and how it can be used for EFIs.
-- How to prepare and read in data for use in deep learning.
-- Basics of using the <a href="https://lightning.ai/docs/pytorch/stable/" target="_blank">PyTorch Lightning</a> deep learning library.
-- Training a deep learning model for  species classification and biomass prediction tasks.
-- Testing and evaluating deep learning models.
+This website is a central resource for the **Multi-Scale Biomass Mapping and Timber Assessment in the Yukon Territory** project, undertaken in collaboration with the Yukon Government and the University of British Columbia's Integrated Remote Sensing Studio. It provides tutorials for processing and analysing forest inventory and remote sensing data, alongside practical examples of methods and outputs developed through the project's work packages.
 
-::: callout-note
-This site will remain open after the workshop for participants to review the content or share it with others. Because deep neural networks often require long training times, all datasets, training outputs, and model evaluations have been precomputed and are provided as part of this tutorial. We encourage you to follow along with the workshop to ask and return to the site at a later time to run the code/examples. If you have questions after the workshop or encounter any issues you can submit an issue via <a href="https://github.com/Brent-Murray/DeepLearningEFI/issues/new" target="_blank">GitHub</a>.
-:::
+The project integrates field measurements, satellite imagery, environmental datasets, airborne LiDAR, and drone-based remote sensing to support forest biomass estimation, enhanced forest inventories, and post-fire assessment. The tutorials and examples are intended to document reproducible workflows and support their application to Yukon forest management and planning.
 
-::: {.hero}
-## Setup
-To get ready for this workshop follow the links below.
+## Project work packages
 
-[Get Started](setup.qmd){.btn .btn-primary} [View Schedule](schedule.qmd){.btn .btn-outline-primary}
-:::
+The project includes complementary postdoctoral and PhD research components.
 
-## Instructors
-| Name | Affiliation |
-|---|---|
-| <a href="https://www.researchgate.net/profile/Brent-Murray-4" target="_blank">Brent Murray</a> | Integrated Remote Sensing Studio. University of British Columbia |
-| <a href="https://www.researchgate.net/profile/Harry-Seely" target="_blank">Harry Seely</a> | Integrated Remote Sensing Studio. University of British Columbia |
-| <a href="https://www.researchgate.net/profile/Yuwei-Cao-2?ev=hdr_xprf" target="_blank">Yuwei Cao</a> | Integrated Remote Sensing Studio. University of British Columbia |
-| <a href="https://www.researchgate.net/profile/Ahmed-Ragab-17" target="_blank">Ahmed Ragab</a> | CanmetENERGY. Natural Resrouces Canada;<br>Department of Mathematics and Industrial Engineering. Polytechnique Montreal |
+### Postdoctoral Research: Multiscale Forest Biomass and Inventory Assessment
+This research focuses on developing a multiscale remote sensing framework that integrates satellite imagery, airborne and drone-based LiDAR, and field observations to improve forest biomass estimation and inventory assessments across Yukon. Through three interconnected work packages, the project aims to provide reliable, spatially explicit information to support carbon accounting, wildfire planning, timber salvage, and sustainable forest management, while developing reproducible workflows for operational use. The work is organized into three work packages:
+
+#### Work Package 1: Territory-wide biomass mapping
+
+Develop a territory-wide forest biomass map using field plot measurements, satellite imagery, topographic and climate information, and predictive modelling. Project resources will cover data preparation, biomass estimation, model validation, uncertainty assessment, and mapping.
+
+#### Work Package 2: Rapid Enhanced Forest Inventory
+
+Develop reproducible LiDAR-based workflows for generating forest inventory attributes at finer spatial scales, including approaches that can support assessment of fire-affected forests. Resources will include point-cloud processing, structural metric generation, inventory modelling, and example mapping outputs.
+
+#### Work Package 3: Post-fire stand inventory and assessment
+
+Evaluate drone-based LiDAR and imagery for characterizing post-fire forest conditions and supporting inventory and salvage planning. Examples will illustrate data acquisition and processing approaches, comparison with field measurements, and assessment of forest structural attributes.
+
+### PhD Research: Multi-Platform LiDAR Quantification of Post-Fire Slash Biomass and Integration into Carbon Accounting and Wildfire Risk Systems in Yukon Boreal Forests
+
+The PhD component focuses on quantifying slash pile biomass using multiple LiDAR platforms and integrating post-fire structural information into carbon accounting and wildfire risk assessment. The work is organized into two work packages:
+
+#### Work Package 1: Multi-Platform Data Acquisition and Structural Assessment
+
+Establish representative fire- and harvest-affected study sites across Yukon to evaluate the use of drone LiDAR, airborne LiDAR, and photogrammetry for characterizing slash piles. Ground measurements and three-dimensional point cloud metrics will be used to assess pile structure, volume, and variability across different forest and environmental conditions.
+
+#### Work Package 2: Biomass Estimation and Cross-Platform Transferability
+
+Develop and evaluate statistical and machine learning models to estimate slash pile biomass from remotely sensed structural metrics. This work will assess model accuracy, uncertainty, and transferability across LiDAR platforms, with the goal of establishing reproducible workflows and operational guidelines for biomass estimation in Yukon forests.
+
+## Tutorials and examples
+
+Tutorials and worked examples will be added as project workflows and datasets become available. The links below currently point to placeholder sections on this page; they can later be replaced with links to separate tutorial pages.
+
+- [Biomass mapping and modelling](#tutorials-biomass)
+- [LiDAR processing and enhanced forest inventory](#tutorials-efi)
+- [Post-fire drone data processing](#tutorials-postfire)
+- [Slash pile biomass and multi-platform LiDAR](#tutorials-slash)
+
+### Biomass mapping and modelling {#tutorials-biomass}
+
+*Tutorials coming soon:* predictor preparation, model training and validation, biomass mapping, and uncertainty assessment.
+
+### LiDAR processing and enhanced forest inventory {#tutorials-efi}
+
+*Tutorials coming soon:* point-cloud preparation, structural metrics, inventory modelling, and mapping.
+
+### Post-fire drone data processing {#tutorials-postfire}
+
+*Tutorials coming soon:* drone LiDAR and imagery processing, post-fire structural attributes, and comparison with field observations.
+
+### Slash pile biomass and multi-platform LiDAR {#tutorials-slash}
+
+*Tutorials coming soon:* slash pile measurements, three-dimensional feature extraction, cross-platform comparison, and biomass estimation.
