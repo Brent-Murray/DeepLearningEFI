@@ -1,8 +1,7 @@
-# Multi-Scale Biomass Mapping and Timber Assessment in the Yukon Territory
+# Deep Learning with Airborn Laser Scanning Data for Forest Inventories
 
-This website is a central resource for the \*\*Multi-Scale Biomass Mapping and Timber Assessment in the Yukon Territory\*\* project, undertaken in collaboration with the Yukon Government and the University of British Columbia's Integrated Remote Sensing Studio. It provides tutorials for processing and analysing forest inventory and remote sensing data, alongside practical examples of methods and outputs developed through the project's work packages.
+This is an introductory workshop for deep learning techniques for Enhanced Forest Inventories (EFIs) presented at the Canadian Cross-Country EFI Checkup 2026. The workshop covers a basic end-to-end deep learning workflow for EFI applicatoins, covering an introduction into deep learning, to data preparation, and final a demo of model training, evaluation, and deployment. There will also be some examples of real world forest inventory deep learning applications showcasing some of the possibilities there are with these techniques.
 
+For more information or to work through the content please go to the [home page](https://brent-murray.github.io/DeepLearningEFI/).
 
-
-The project integrates field measurements, satellite imagery, environmental datasets, airborne LiDAR, and drone-based remote sensing to support forest biomass estimation, enhanced forest inventories, and post-fire assessment. The tutorials and examples are intended to document reproducible workflows and support their application to Yukon forest management and planning.
-
+You can download the tutorial dataset [here](https://doi.org/10.5281/zenodo.18420757).

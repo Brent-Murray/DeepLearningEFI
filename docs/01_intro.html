@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Introduction to Deep Learning – Deep Learning for Forest Inventories</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./images/TreeNetwork.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-acb86da7cc94e534617b9af23b514896.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/TreeNetwork.png" alt="" class="navbar-logo light-content">
+    <img src="./images/TreeNetwork.png" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Deep Learning for Forest Inventories</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./01_intro.html" aria-current="page"> 
+<span class="menu-text">1-Intro</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./02_data.html"> 
+<span class="menu-text">2-Data</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./03_train.html"> 
+<span class="menu-text">3-Train</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./04_evaluation.html"> 
+<span class="menu-text">4-Evaluation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./05_examples.html"> 
+<span class="menu-text">5-Examples</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#relevant-resources" id="toc-relevant-resources" class="nav-link active" data-scroll-target="#relevant-resources">Relevant Resources</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#human-centric-artificial-intelligence-for-enhanced-forest-inventories" id="toc-human-centric-artificial-intelligence-for-enhanced-forest-inventories" class="nav-link" data-scroll-target="#human-centric-artificial-intelligence-for-enhanced-forest-inventories">Human-Centric Artificial Intelligence for Enhanced Forest Inventories</a>
+  <ul class="collapse">
+  <li><a href="#descriptive-modelling-learning-structure-from-data" id="toc-descriptive-modelling-learning-structure-from-data" class="nav-link" data-scroll-target="#descriptive-modelling-learning-structure-from-data">Descriptive modelling: learning structure from data</a></li>
+  <li><a href="#predictive-modelling-estimating-forest-attributes-at-scale" id="toc-predictive-modelling-estimating-forest-attributes-at-scale" class="nav-link" data-scroll-target="#predictive-modelling-estimating-forest-attributes-at-scale">Predictive modelling: estimating forest attributes at scale</a></li>
+  <li><a href="#prescriptive-modelling-from-prediction-to-decisions" id="toc-prescriptive-modelling-from-prediction-to-decisions" class="nav-link" data-scroll-target="#prescriptive-modelling-from-prediction-to-decisions">Prescriptive modelling: from prediction to decisions</a></li>
+  <li><a href="#generative-modelling-exploring-what-if-scenarios" id="toc-generative-modelling-exploring-what-if-scenarios" class="nav-link" data-scroll-target="#generative-modelling-exploring-what-if-scenarios">Generative modelling: exploring “what-if” scenarios</a></li>
+  </ul></li>
+  <li><a href="#what-is-deep-learning" id="toc-what-is-deep-learning" class="nav-link" data-scroll-target="#what-is-deep-learning">What is Deep Learning?</a>
+  <ul class="collapse">
+  <li><a href="#components-of-a-deep-neural-network" id="toc-components-of-a-deep-neural-network" class="nav-link" data-scroll-target="#components-of-a-deep-neural-network">Components of a deep neural network</a></li>
+  <li><a href="#the-prediction---feedback-loop" id="toc-the-prediction---feedback-loop" class="nav-link" data-scroll-target="#the-prediction---feedback-loop">The prediction - feedback loop</a></li>
+  <li><a href="#common-deep-learning-tasks" id="toc-common-deep-learning-tasks" class="nav-link" data-scroll-target="#common-deep-learning-tasks">Common deep learning tasks</a></li>
+  </ul></li>
+  <li><a href="#image-based-vs.-point-based-deep-learning" id="toc-image-based-vs.-point-based-deep-learning" class="nav-link" data-scroll-target="#image-based-vs.-point-based-deep-learning">Image-Based vs.&nbsp;Point-Based Deep Learning</a>
+  <ul class="collapse">
+  <li><a href="#image-based-deep-learning" id="toc-image-based-deep-learning" class="nav-link" data-scroll-target="#image-based-deep-learning">Image-based deep learning</a></li>
+  <li><a href="#point-based-deep-learning" id="toc-point-based-deep-learning" class="nav-link" data-scroll-target="#point-based-deep-learning">Point-based deep learning</a></li>
+  </ul></li>
+  <li><a href="#key-terminology-and-concepts-to-know" id="toc-key-terminology-and-concepts-to-know" class="nav-link" data-scroll-target="#key-terminology-and-concepts-to-know">Key Terminology and Concepts to Know</a>
+  <ul class="collapse">
+  <li><a href="#parameters-vs.-hyperparameters" id="toc-parameters-vs.-hyperparameters" class="nav-link" data-scroll-target="#parameters-vs.-hyperparameters">Parameters vs.&nbsp;hyperparameters</a></li>
+  <li><a href="#input-features-vs.-labels-vs.-learned-features-vs.-logits" id="toc-input-features-vs.-labels-vs.-learned-features-vs.-logits" class="nav-link" data-scroll-target="#input-features-vs.-labels-vs.-learned-features-vs.-logits">Input features vs.&nbsp;labels vs.&nbsp;learned features vs.&nbsp;logits</a></li>
+  <li><a href="#data-augmentation" id="toc-data-augmentation" class="nav-link" data-scroll-target="#data-augmentation">Data augmentation</a></li>
+  <li><a href="#batches-batch-size" id="toc-batches-batch-size" class="nav-link" data-scroll-target="#batches-batch-size">Batches &amp; batch size</a></li>
+  <li><a href="#model-architecture-vs.-model-weights" id="toc-model-architecture-vs.-model-weights" class="nav-link" data-scroll-target="#model-architecture-vs.-model-weights">Model architecture vs.&nbsp;model weights</a></li>
+  <li><a href="#forward-pass-vs.-backward-pass" id="toc-forward-pass-vs.-backward-pass" class="nav-link" data-scroll-target="#forward-pass-vs.-backward-pass">Forward pass vs.&nbsp;backward pass</a></li>
+  <li><a href="#training-loop" id="toc-training-loop" class="nav-link" data-scroll-target="#training-loop">Training loop</a></li>
+  <li><a href="#gradient-descent" id="toc-gradient-descent" class="nav-link" data-scroll-target="#gradient-descent">Gradient descent</a></li>
+  <li><a href="#transfer-learning-fine-tuning" id="toc-transfer-learning-fine-tuning" class="nav-link" data-scroll-target="#transfer-learning-fine-tuning">Transfer learning &amp; fine-tuning</a></li>
+  </ul></li>
+  <li><a href="#challenges-and-considerations-for-deep-learning-in-forestry-applications" id="toc-challenges-and-considerations-for-deep-learning-in-forestry-applications" class="nav-link" data-scroll-target="#challenges-and-considerations-for-deep-learning-in-forestry-applications">Challenges and Considerations for Deep Learning in Forestry Applications</a></li>
+  <li><a href="#frequently-asked-questions" id="toc-frequently-asked-questions" class="nav-link" data-scroll-target="#frequently-asked-questions">Frequently Asked Questions</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/Brent-Murray/DeepLearningEFI/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Introduction to Deep Learning</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-left">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="relevant-resources" class="level2">
+<h2 class="anchored" data-anchor-id="relevant-resources">Relevant Resources</h2>
+<ul>
+<li><a href="./01-intro-deep-learning-slides.html"><strong>Slides for Introduction</strong></a></li>
+<li><a href="https://www.deeplearningbook.org/"><strong>The Deep Learning Book</strong></a></li>
+<li><a href="https://d2l.ai/"><strong>Dive into Deep Learning</strong></a></li>
+<li><a href="https://youtube.com/playlist?list=PLjctrnwG0NeT9dd2mvP3W40TdX58rZc1P&amp;si=2XOgUqho5YtppYij"><strong>MIT Introduction to Deep Learning Lecture Series</strong></a></li>
+</ul>
+</section>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>This section provides a foundational introduction to deep learning with a focus on applications for enhanced forest inventories (EFIs). It introduces core concepts behind neural networks, explains how models learn through the prediction-feedback loop, and outlines common deep learning tasks such as classification, regression and segmentation. This section also contrasts image-based and point-based deep learning approaches, establishes key terminology used throughout the workflow, and highlights practical challenges encountered when applying deep learning to real-world forestry data.</p>
+<p>By the end of this section our hope is that you will be able to:</p>
+<ol type="1">
+<li><p>Understand the human-centric role of artificial intelligence for enhanced forest inventory modelling</p></li>
+<li><p>Explain how deep learning relates to artificial intelligence and machine learning</p></li>
+<li><p>Describe the structure and components of a deep neural network</p></li>
+<li><p>Understand how models learn through loss functions, gradients and iterative training</p></li>
+<li><p>Compare image-based and point-based deep learning approaches</p></li>
+<li><p>Familiarize yourself with core deep learning terminology correctly (e.g., parameters, hyperparameters, batches, epochs)</p></li>
+<li><p>Recognize common challenges when applying deep learning to forestry and remote sensing data</p></li>
+</ol>
+</section>
+<section id="human-centric-artificial-intelligence-for-enhanced-forest-inventories" class="level2">
+<h2 class="anchored" data-anchor-id="human-centric-artificial-intelligence-for-enhanced-forest-inventories">Human-Centric Artificial Intelligence for Enhanced Forest Inventories</h2>
+<p>EFIs have traditionally relied on field measurements, allometric equations, statistical models, and process-informed assumptions to estimate forest attributes such as biomass, volume, canopy height, species composition, and structural complexity. These approaches remain foundational to forestry. However, the increasing availability of rich remote sensing data, particularly Airborne Laser Scanning (ALS), multispectral imagery, and other spatial products, has significantly expanded what can be measured and modeled.</p>
+<p>Artificial Intelligence (AI), and more specifically deep learning, should not be seen as a replacement for traditional forestry knowledge. Instead, AI provides <strong>human-centric computational modelling capabilities</strong> that complement and extend existing approaches. <strong>Domain expertise remains essential throughout the entire end-to-end workflow</strong>, from data preparation and selection to model evaluation and interpretation. In this sense, deep learning acts as a tool that amplifies human decision-making rather than automating it away.</p>
+<p>While this workshop focuses primarily on classification and regression tasks, it is useful to situate these methods within a broader AI context. At a high level, AI techniques used for EFIs can be grouped into four modelling capabilities: <strong>descriptive, predictive, prescriptive, and generative.</strong> Understanding these capabilities helps clarify the role of deep learning in forest inventories and how it can support forest management and decision-making.</p>
+<table class="caption-top table">
+<caption>Table 1: The 4 Pillars of AI Capability in Forestry</caption>
+<colgroup>
+<col style="width: 6%">
+<col style="width: 43%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Capability</th>
+<th>What the AI Does</th>
+<th>The Indispensable Human Role</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descriptive</strong></td>
+<td>Extracts meaningful patterns and representations from complex data (e.g., raw ALS point clouds.</td>
+<td><em>Contextualizing Structure:</em> defining what “meaningful” structure looks like across Canada’s diverse ecozones.</td>
+</tr>
+<tr class="even">
+<td><strong>Predictive</strong></td>
+<td>Learns non-linear relationships between remote sensing data and attributes like biomass or species.</td>
+<td><em>Data Governance:</em> selecting the response variables and ground-truth plots that reflect real-world variability.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prescriptive</strong></td>
+<td>Simulates scenarios to recommend optimal management paths (harvesting, conservation, or risk mitigation).</td>
+<td><em>Strategic Oversight:</em> ensuring that AI recommendations align with policy, biodiversity goals, and socio-economic needs.</td>
+</tr>
+<tr class="even">
+<td><strong>Generative</strong></td>
+<td>Synthesizes realistic forest data to fill gaps in remote regions or explore “what-if” climate scenarios.</td>
+<td><em>Ecological Validation:</em> verifying that synthetic scenarios are biologically plausible and scientifically sound.</td>
+</tr>
+</tbody>
+</table>
+<section id="descriptive-modelling-learning-structure-from-data" class="level3">
+<h3 class="anchored" data-anchor-id="descriptive-modelling-learning-structure-from-data">Descriptive modelling: learning structure from data</h3>
+<p>Descriptive modelling focuses on <strong>extracting meaningful patterns and representations from complex data</strong>. For example, ALS point clouds contain detailed 3D information about canopy and understory structure, as well as the terrain. Traditionally, this information was summarized using handcrafted features such as height percentiles or canopy cover metrics.</p>
+<p>Deep learning enables models to <strong>learn hierarchical feature representations directly from raw or minimally processed data</strong>, capturing subtle patters that are difficult to define manually. In EFIs, this allows for:</p>
+<ul>
+<li>Automatic extraction of structural representations from ALS data that captures both the horizontal and vertical forest complexity</li>
+<li>More consistent feature extraction across regions and forest types</li>
+</ul>
+<p><strong>Human expertise remains critical</strong> in selecting appropriate data sources, interpreting learned features and validating that extracted patterns are meaningful for real-world forestry.</p>
+</section>
+<section id="predictive-modelling-estimating-forest-attributes-at-scale" class="level3">
+<h3 class="anchored" data-anchor-id="predictive-modelling-estimating-forest-attributes-at-scale">Predictive modelling: estimating forest attributes at scale</h3>
+<p>Predictive modelling is the most familiar application of AI in forestry. It involves learning relationships between inputs (e.g., ALS-derived features) and outputs (e.g.&nbsp;forest attributes). Deep learning excels in predictive tasks when:</p>
+<ul>
+<li>Relationships are nonlinear and high-dimensional</li>
+<li>Data comes from multiple sources or modalities</li>
+</ul>
+<p>Common predictive EFI applications include classification tasks such as species groups, forest types, or disturbance classes as well as regression tasks such as estimating biomass, volume, or canopy height. Compared to traditional regression or allometric models, deep learning approaches can scale more effectively across regions, adapt to diverse forest conditions, and reduce the need for manual feature engineering.</p>
+<p><strong>Human input remains indispensable</strong> for selecting meaningful response variables, designing appropriate training and validation datasets, and interpreting predictions within a forestry context.</p>
+</section>
+<section id="prescriptive-modelling-from-prediction-to-decisions" class="level3">
+<h3 class="anchored" data-anchor-id="prescriptive-modelling-from-prediction-to-decisions">Prescriptive modelling: from prediction to decisions</h3>
+<p>Prescriptive modelling likes predictions to <strong>actions or decisions</strong>. While this workshop does not implement perspective models directly, understanding their relevance is important. In forestry, prescriptive AI can support:</p>
+<ul>
+<li>Inventory-driven management planning</li>
+<li>Prioritization for harvesting, conservation, or monitoring</li>
+<li>Optimization of sampling strategies and data acquisition</li>
+</ul>
+<p>Accurate predictive models are a <strong>necessary foundation</strong> for prescriptive applications and better EFI predictions lead to better forestry decisions. <strong>Domain expertise ensures that prescriptive recommendations are practical and aligned with forest management objectives.</strong></p>
+</section>
+<section id="generative-modelling-exploring-what-if-scenarios" class="level3">
+<h3 class="anchored" data-anchor-id="generative-modelling-exploring-what-if-scenarios">Generative modelling: exploring “what-if” scenarios</h3>
+<p>Generative modelling focuses on <strong>creating new data or scenarios that are consistent with observed patterns.</strong> In the context of EFIs, this may include:</p>
+<ul>
+<li>Simulating forest structures under different management or disturbance scenarios</li>
+<li>Augmenting training data in regions with limited field measurements</li>
+<li>Exploring uncertainty and variability in forest inventory estimates</li>
+</ul>
+<p>While generative models are outside the scope of this workshop, understanding their role helps place predictive deep learning within the broader AI trajectory for EFIs. <strong>Human expertise is key for designing realistic scenarios and validating their ecological relevance.</strong></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>Human expertise is essential at every step</em> from preparing data and defining tasks to interpreting results and making management decisions. Human-centric AI ensures that deep learning tools enhance existing forestry knowledge rather than replace it.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="what-is-deep-learning" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-deep-learning">What is Deep Learning?</h2>
+<p>Deep learning is a branch of machine learning, which in turn is a subset of AI. <strong>AI</strong> refers to methods that enable machines to mimic human behavior. <strong>Machine learning</strong> uses statistical techniques to allow machines to improve their performance through experience. <strong>Deep learning</strong> is a machine learning approach that focuses on the use of neural networks with a large number of hidden layers. The terms neural network and deep learning are used interchangeably, and we will use both throughout this workshop.</p>
+<div id="fig-ai-vendiagram" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ai-vendiagram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/aivendiagram.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ai-vendiagram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Hierarchy Types of Artificial Intelligence Methods and Common Examples of Each
+</figcaption>
+</figure>
+</div>
+<section id="components-of-a-deep-neural-network" class="level3">
+<h3 class="anchored" data-anchor-id="components-of-a-deep-neural-network">Components of a deep neural network</h3>
+<p>There are several key components and terms commonly used to describe a neural network. The <strong>depth</strong> of a neural network refers to the number of <strong>layers</strong> in its architecture (the example in <a href="#fig-neuralnetwork" class="quarto-xref">Figure&nbsp;2</a> has five layers), whereas the <strong>width</strong> refers to the number of neurons within each layer. Increasing depth allows the network to learn more <strong>hierarchical and abstract representations</strong> of the input data, as successive layers can model increasingly complex feature interactions. Increasing width, on the other hand, increases the <strong>representational capacity</strong> of each layer, enabling the model to capture more variability at a given level of abstraction. In practice, deeper and wider networks can improve predictive performance but also increase the risk of overfitting, computational cost, and training instability, making their choice a trade-off that depends on data size, complexity, and modelling task.</p>
+<div id="fig-neuralnetwork" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-neuralnetwork-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/neuralnet.png" class="img-fluid quarto-figure quarto-figure-center figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-neuralnetwork-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Components of a Neural Network
+</figcaption>
+</figure>
+</div>
+<p>The most fundamental unit of a deep neural network is the <strong>neuron</strong>, which serves as the building block of any neural network. A neuron receives a set of inputs (<span class="math inline">\(x_i\)</span>), weights (<span class="math inline">\(w_i\)</span>) and sums them, while adding a bias term (<span class="math inline">\(b\)</span>). These <strong>weights</strong> and <strong>biases</strong> are adjustable parameters that the network learns during <strong>training</strong>.</p>
+<p><span class="math display">\[
+\Large y = w_1x_1 + w_2x_2 + b
+\]</span></p>
+<p>Another important part of a neuron is called the <strong>activation</strong>. The output of the weighted sum (<span class="math inline">\(y\)</span>) is passed through an activation function, which determines the strength of the output and whether the neuron becomes activated or not. Activation functions are essential because they introduce nonlinearity into the model. Without them, every layer would behave like a linear transformation, and no matter how many layers were stacked, the network could only learn simple linear relationships. By adding nonlinear activations, deep neural networks can capture complex patterns and interactions in the data, making it possible to learn rich structure found in imagery and point clouds.</p>
+<div id="fig-neuron" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-neuron-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/neuron.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-neuron-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Components of a Neuron
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There are many types of activation functions, and you are encouraged to research which one would be best for your specific use case.</p>
+</div>
+</div>
+</section>
+<section id="the-prediction---feedback-loop" class="level3">
+<h3 class="anchored" data-anchor-id="the-prediction---feedback-loop">The prediction - feedback loop</h3>
+<p>The <strong>prediction-feedback loop</strong> is what makes <strong>learning</strong> possible as a deep neural network doesn’t just memorize the data, it adapts to the patterns within and generalizes from them. This allows a model to progressively fine-tune how it <em>sees</em> the input <strong>data</strong> to improve its performance with respect to the <strong>goal</strong> and the <strong>task</strong>.</p>
+<div id="fig-feedback-loop" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-feedback-loop-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/feedbackloop.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-feedback-loop-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Prediction-Feedback Loop
+</figcaption>
+</figure>
+</div>
+<p>This prediction–feedback loop is driven by the goal of the <strong>loss function</strong>, which guides the model in adjusting its weights and biases toward an optimal solution. The loss function assesses the difference between the true and predicted <strong>labels</strong>, typically, with the objective of minimizing the error between the two. There are multiple types of loss functions, each providing different forms of feedback to the model. Choosing an appropriate loss function depends on the task (e.g., classification, regression), and is a crucial step in the deep neural network’s design.</p>
+<p>A key part of this update process involves <strong>gradients</strong>, which measure how sensitive the loss is to small changes in each weight or bias. Gradients point the model in the direction that most reduces error, allowing the network to adjust its parameters efficiently. During training, these gradients are computed and used to iteratively update the weights so that, over time, the model’s predictions become more accurate. Although gradients operate behind the scenes, they are central to how deep neural networks learn from the data.</p>
+<p>Over multiple iterations, or <strong>epochs</strong>, the model continually adjusts its weights and biases based on the feedback received from the loss function. Eventually, the model reaches a point where no further improvements are made given the available data, and the loss begins to stabilize, indicating that the model has converged to an optimal or near-optimal solution.</p>
+<div id="fig-epochs" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-epochs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/epochs.gif" class="img-fluid quarto-figure quarto-figure-center figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-epochs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Model Adjusting Over Epochs
+</figcaption>
+</figure>
+</div>
+<p>This iterative adjustment process is called model training and involves a <strong>training</strong> and a separate <strong>validation</strong> dataset. The training dataset is used to teach the model by updating its parameters, while the validation dataset assesses how well the model generalizes to unseen data. Monitoring performance on the validation set helps to detect <strong>overfitting</strong> (when a model learns the training data too closely and fails to perform well on new inputs), thereby ensuring that the final model remains both accurate and robust. We can monitor this using <strong>loss curves</strong> as seen in <a href="#fig-epochs" class="quarto-xref">Figure&nbsp;5</a>, by verifying that the loss continues to drop for both the training and validation datasets.</p>
+<p>After the prediction-feedback loop (training and validation), a <strong>testing</strong> dataset is used to provide an unbiased evaluation of the model’s final performance. Unlike the validation set, which is used to guide the model tuning during training, the test set is completely withheld until all adjustments are complete. This ensures that the performance metrics accurately reflect how the model will behave on truly unseen data, offering a realistic measure of its generalization ability and reliability for real-world applications.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>It is crucial that these three separate and distinct datasets (training, validation, and testing) are properly prepared for training deep neural networks. Mixing or reusing data between these datasets can lead to misleading performance metrics and poor generalization. Proper separation ensures that the model is evaluated fairly at each stage of development and that its reported accuracy truly reflects performance on new, unseen data.</p>
+</div>
+</div>
+</section>
+<section id="common-deep-learning-tasks" class="level3">
+<h3 class="anchored" data-anchor-id="common-deep-learning-tasks">Common deep learning tasks</h3>
+<section id="classification" class="level4">
+<h4 class="anchored" data-anchor-id="classification">Classification</h4>
+<p><strong>Classification</strong> assigns each input (an image, pixel, object, or point cloud sample) to a discrete class. This is often the starting point in deep learning for ecological or environmental analysis.</p>
+<p>Common forestry classification applications include:</p>
+<ul>
+<li><strong>Tree-species recognition:</strong> Using spectral signatures, textural patterns, or structural characteristics to classify (label) species at the tree or stand level.</li>
+<li><strong>Land-cover mapping:</strong> Categorizing pixels into classes such as forest, water, bare ground, or herbaceous vegetation.</li>
+<li><strong>Disturbance detection:</strong> Identifying wildfire scars, harvest events, pest outbreaks, or storm damage.</li>
+<li><strong>Health or stress classification:</strong> Detecting and identifying different stressed areas or detecting tree mortality at the tree or stand level.</li>
+</ul>
+<div id="fig-classification" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-classification-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/classification.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-classification-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Classification
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="regression" class="level4">
+<h4 class="anchored" data-anchor-id="regression">Regression</h4>
+<p><strong>Regression</strong> models predict continuous numerical values, making them ideal for estimating biophysical variables derived from remote sensing datasets. Rather than assigning categories, they learn patterns that correspond to a continuous numerical output.</p>
+<p>Typical forestry-focused regression tasks include:</p>
+<ul>
+<li><strong>Above-ground biomass estimation:</strong> Using spectral reflectance, canopy texture or structural characteristics from lidar to estimate the AGB of a tree or stand.</li>
+<li><strong>Canopy cover for leaf area index estimation:</strong> Modelling continuous vegetation density across forested landscapes.</li>
+<li><strong>Crown diameter or volume:</strong> Predicting various individual-tree metrics.</li>
+</ul>
+<div id="fig-regression" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-regression-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/regression.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-regression-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Regression
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="segmentation" class="level4">
+<h4 class="anchored" data-anchor-id="segmentation">Segmentation</h4>
+<p><strong>Segmentation</strong> assigns a label to every pixel/point (<strong>semantic segmentation</strong>) or separates individual objects within an image or point cloud (<strong>instance segmentation</strong>). This task is essential when the goal is to create detailed spatial maps rather than broad classifications.</p>
+<p>In forestry applications, segmentation helps support:</p>
+<ul>
+<li><strong>Tree-crown delineation:</strong> Separating individual tree crowns in imagery or point clouds for per-tree analyses.</li>
+<li><strong>Stand or management-unit boundaries:</strong> Automatically outlining key forest changes or stand edges.</li>
+<li><strong>Vegetation structure mapping:</strong> Distinguishing between canopy, understory, stem, and ground points from lidar data.</li>
+</ul>
+<div id="fig-segmentation" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-segmentation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/segmentation.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-segmentation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Segmentation
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+</section>
+<section id="image-based-vs.-point-based-deep-learning" class="level2">
+<h2 class="anchored" data-anchor-id="image-based-vs.-point-based-deep-learning">Image-Based vs.&nbsp;Point-Based Deep Learning</h2>
+<section id="image-based-deep-learning" class="level3">
+<h3 class="anchored" data-anchor-id="image-based-deep-learning">Image-based deep learning</h3>
+<p><strong>Image-based</strong> deep learning is a computer vision method that teaches computers to understand and interpret images. Instead of manually telling the computer what to look for, these algorithms automatically learn patterns from large sets of images. These algorithms can learn features like edges, shapes, and colours, and can eventually identify complex objects such as trees. Because these models learn directly from the data, they can help computers effectively <em>see</em> and make sense of the imagery.</p>
+<div id="fig-imagedl" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-imagedl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/imagedl.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-imagedl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Image Based Deep Learning
+</figcaption>
+</figure>
+</div>
+<p>A common image-based deep learning technique is the <strong>convolutional neural network (CNN)</strong>. CNNs use filters (also called kernels) that slide across an image to detect important visual features. These filters help the network to focus on local patterns while preserving the spatial relationships in the image. As the data moves through the different layers of the network, the CNN learns increasingly complex patterns.</p>
+<div id="fig-convolutions" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-convolutions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/convolutions.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-convolutions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: Convolutional Neural Networks
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="point-based-deep-learning" class="level3">
+<h3 class="anchored" data-anchor-id="point-based-deep-learning">Point-based deep learning</h3>
+<p><strong>Point-based</strong> deep learning is a method used to analyze 3D point cloud data. Unlike image data, which is structured in a grid of pixels, point clouds are irregular and unstructured, making them harder for traditional neural networks to process. Point-based deep neural networks are designed to handle this challenge by directly learning from the spatial relationships between points without requiring conversion into images or grids. By learning the geometric patterns directly from the raw point clouds, these models are able to provide an accurate and detailed understanding of complex 3D structures of the forest. Similar to image-based approaches as the data moves through successive layers, and increasingly complex patterns are extracted.</p>
+<div id="fig-pointdl" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pointdl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/pointdl.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pointdl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11: Point Based Deep Learning
+</figcaption>
+</figure>
+</div>
+<p>A common point-based deep learning technique is <strong>set abstraction</strong>, used in models such as PointNet++ <a href="https://dl.acm.org/doi/10.5555/3295222.3295263" target="_blank">(Qi et al., 2017)</a>. Instead of sliding filters over a grid like a CNN, set abstraction groups nearby points in the point cloud to capture local geometric patterns. Each layer selects representative points, gathers their neighbours, and learns features from these local groups. As the data moves through successive layers, the model captures increasingly complex 3D structures from fine details to larger objects such as trees and forest canopies.</p>
+<div id="fig-set-abstraction" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-set-abstraction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/setabstraction.png" class="img-fluid quarto-figure quarto-figure-center figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-set-abstraction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12: Set Abstraction (adapted from Qi et al., (2017))
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="key-terminology-and-concepts-to-know" class="level2">
+<h2 class="anchored" data-anchor-id="key-terminology-and-concepts-to-know">Key Terminology and Concepts to Know</h2>
+<p>Before exploring data preparation, training workflows, and model evaluation, it is useful to establish a common vocabulary describing how deep neural networks operate. The terms below describe the core components, processes, and ideas that appear throughout all deep learning methods, regardless of the specific architecture or data type. Understanding these concepts will help clarify how models learn, how they are structured, and how different parts of the training pipeline fit together.</p>
+<section id="parameters-vs.-hyperparameters" class="level3">
+<h3 class="anchored" data-anchor-id="parameters-vs.-hyperparameters">Parameters vs.&nbsp;hyperparameters</h3>
+<p><strong>Parameters</strong> are the internal values of a neural network that are learned during training. These include the weights and biases in each layer. They are updated automatically through optimization algorithms and define how the model transforms inputs into predictions.</p>
+<p><strong>Hyperparameters</strong> control <em>how</em> a model learns rather than what it learns. Examples include learning rate, batch size, number of epochs, and model depth. Unlike parameters, hyperparameters are set by the user and are not learned during training. These often need to be tuned in order to achieve optimal results.</p>
+</section>
+<section id="input-features-vs.-labels-vs.-learned-features-vs.-logits" class="level3">
+<h3 class="anchored" data-anchor-id="input-features-vs.-labels-vs.-learned-features-vs.-logits">Input features vs.&nbsp;labels vs.&nbsp;learned features vs.&nbsp;logits</h3>
+<p><strong>Input Features</strong> are the input variables or measurements the model receives. In imagery, these might be pixel values from the spectral bands; in point clouds, they may include XYZ coordinates, intensity, or return number. Features describe the data but not the model’s predictions.</p>
+<p><strong>Labels</strong> represent the target values the model is trying to predict. These can be discrete classes (e.g.&nbsp;species), continuous values (e.g.&nbsp;biomass), or spatial assignments (e.g.&nbsp;segmentation masks). Labels are essential for supervised learning.</p>
+<p><strong>Learned Features</strong> are internal representations automatically discovered by the neural network as the data moves through its layers. Unlike input features, which come directly from the dataset, learned features are generated by the model itself. Early layers often capture simple patterns such as edges or local geometry, while deeper layers encode more abstract concepts such as textures, shapes, or structural patterns. These learned features enable deep neural networks to extract complex information without requiring manual feature engineering.</p>
+<p><strong>Logits</strong> are the raw, unnormalized outputs of a neural network’s final layer before an activation function is applied. In classification tasks, they represent the model’s scores for each class and are typically transformed into probabilities using functions such as softmax or sigmoid. Logits are commonly used directly by the loss function for numerical stability.</p>
+</section>
+<section id="data-augmentation" class="level3">
+<h3 class="anchored" data-anchor-id="data-augmentation">Data augmentation</h3>
+<p><strong>Data augmentation</strong> refers to the process of artificially increasing the diversity of a training dataset by applying specific and controlled transformations to existing samples. Augmentation introduces realistic variability (e.g., geometric transformations, intensity perturbations, or spatial subsampling), while preserving the underlying labels. This helps improve model generalization by reducing overfitting and increasing robustness to noise, sensor differences, and site variability. Data augmentation is particularly valuable in forestry and remote sensing applications, where labelled data are limited, class imbalances are common, and acquisition conditions vary across regions and sensors.</p>
+<div id="fig-augmentations" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-augmentations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/augmentations.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-augmentations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;13: Point Cloud Augmentations
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="batches-batch-size" class="level3">
+<h3 class="anchored" data-anchor-id="batches-batch-size">Batches &amp; batch size</h3>
+<p>Instead of processing the entire dataset at once, the model learns from small subsets of the data called <strong>batches</strong>. The <strong>batch size</strong> is the number of samples processed per training step. Batch size affects memory usage, training stability, and learning dynamics.</p>
+<div id="fig-batches" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-batches-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/batch.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-batches-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14: Batches
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="model-architecture-vs.-model-weights" class="level3">
+<h3 class="anchored" data-anchor-id="model-architecture-vs.-model-weights">Model architecture vs.&nbsp;model weights</h3>
+<p>The <strong>model architecture</strong> defines the structure of the network, including the number and type of layers and how they are connected. Examples include CNNs for image and point based networks for 3D data. The architecture determines the model’s capacity to learn patterns, and differs based on the goal and task.</p>
+<p><strong>Model weights</strong> are the numerical values stored within each layer that get updated during training while the architecture remains fixed, the weights change continuously, forming the learned representations of the data.</p>
+</section>
+<section id="forward-pass-vs.-backward-pass" class="level3">
+<h3 class="anchored" data-anchor-id="forward-pass-vs.-backward-pass">Forward pass vs.&nbsp;backward pass</h3>
+<p>The <strong>forward pass</strong> is the process where input data moves through the network, from the first layer to the final output, to generate predictions. All computations during this step use the current parameter values.</p>
+<p>The <strong>backward pass</strong> computes gradients that describe how the loss changes with respect to each parameter. These gradients are then used by the optimizer to update the model’s parameters, allowing it to improve over time.</p>
+<div id="fig-backwardpass" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-backwardpass-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/backwardpass.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-backwardpass-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15: Backward Pass
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="training-loop" class="level3">
+<h3 class="anchored" data-anchor-id="training-loop">Training loop</h3>
+<p>The <strong>training loop</strong> refers to the repeated cycle of performing forward passes, computing loss, running backward passes, and updating parameters. This loop continues for a set number of epochs or until the model stops improving.</p>
+</section>
+<section id="gradient-descent" class="level3">
+<h3 class="anchored" data-anchor-id="gradient-descent">Gradient descent</h3>
+<p><strong>Gradient descent</strong> is the core optimization idea that adjusts a model’s parameters to minimize the loss function. By moving the weights in the direction that decreases the error, the model incrementally improves its predictions.</p>
+</section>
+<section id="transfer-learning-fine-tuning" class="level3">
+<h3 class="anchored" data-anchor-id="transfer-learning-fine-tuning">Transfer learning &amp; fine-tuning</h3>
+<p><strong>Transfer learning</strong> is a technique where a deep neural network that has already been trained on a large, general-purpose dataset is reused as the starting point for a new task. Instead of training from scratch, the model begins with learned features that capture useful patterns, such as edges, textures, shapes, or geometric structures, that often transfer well across related tasks and data types.</p>
+<p><strong>Fine-tuning</strong> is the process of adjusting (or refining) some or all of the pretrained model’s weights on your specific dataset. This allows the model to adapt its learned features to the characteristics of your data, such as new species, sensor types, or forest structures. Fine-tuning is especially valuable when labelled data are limited, because it reduces the amount of training needed and often leads to better generalization than starting with a randomly initialized model.</p>
+</section>
+</section>
+<section id="challenges-and-considerations-for-deep-learning-in-forestry-applications" class="level2">
+<h2 class="anchored" data-anchor-id="challenges-and-considerations-for-deep-learning-in-forestry-applications">Challenges and Considerations for Deep Learning in Forestry Applications</h2>
+<p>Forestry data introduces unique complexities that shape how deep neural networks behave in real-world applications. Understanding these challenges at a high level helps set realistic expectations for model performance and highlights why certain design choices are necessary. The following considerations provide important context for why deep learning in forestry often requires additional care compared to more controlled or synthetic environments.</p>
+<table class="caption-top table">
+<caption>Table 2: Key challenges and considerations for applying deep learning to forestry remote sensing.</caption>
+<colgroup>
+<col style="width: 21%">
+<col style="width: 26%">
+<col style="width: 26%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Challenge / Consideration</th>
+<th>Description</th>
+<th>Impact on Deep Neural Networks</th>
+<th>Potential Solutions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>High Variability Across Sensors and Sites</strong></td>
+<td>Remote sensing data originate from different platforms, sensors, and acquisition conditions, with variations in resolution, illumination, phenology, and sensor characteristics.</td>
+<td>Models may fail or struggle to generalize across sites, sensors, or forest types.</td>
+<td>Fine-tuning, domain adaptation, cross-site and cross-sensor calibration.</td>
+</tr>
+<tr class="even">
+<td><strong>Spatial Autocorrelation</strong></td>
+<td>Nearby pixels, trees, or points are inherently more similar than distant ones due to spatial structure in forest environments.</td>
+<td>Spatially clustered training and test samples can inflate performance estimates and reduce true generalization.</td>
+<td>Spatially explicit sampling strategies, spatial cross-validation.</td>
+</tr>
+<tr class="odd">
+<td><strong>Imbalanced Ecological Classes</strong></td>
+<td>Forestry datasets often contain disproportionate representation of dominant species or canopy structures, with minority classes being underrepresented.</td>
+<td>Models tend to prioritize majority classes and perform poorly on rare or minority classes.</td>
+<td>Class weighting, modified loss functions, balanced or stratified sampling.</td>
+</tr>
+<tr class="even">
+<td><strong>Models Developed on Idealized or Synthetic Benchmarks</strong></td>
+<td>Many deep learning architectures are developed and evaluated on synthetic or highly controlled datasets lacking real-world noise, occlusion, and structural complexity.</td>
+<td>Strong benchmark performance may not transfer to operational forestry data.</td>
+<td>Fine-tuning on representative field datasets, model adaptation, incorporation of domain knowledge.</td>
+</tr>
+<tr class="odd">
+<td><strong>Limited Quantity of Labeled Data</strong></td>
+<td>High-quality labeled forestry data are scarce due to costly, time-consuming manual annotation requiring expert knowledge.</td>
+<td>Limited labeled data constrain model training and robustness.</td>
+<td>Data augmentation, semi-supervised learning, transfer learning, pseudo-sample generation.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="frequently-asked-questions" class="level2">
+<h2 class="anchored" data-anchor-id="frequently-asked-questions">Frequently Asked Questions</h2>
+<details>
+<summary>
+<strong>How does deep learning differ from machine learning or artificial intelligence?</strong>
+</summary>
+Artificial intelligence is the broad field of creating systems that perform tasks associated with human intelligence. Machine learning is a subset of artificial intelligence that uses data-driven algorithms to learn patterns and make predictions. Deep learning is a further subset of machine learning that uses multi-layered neural networks to automatically learn complex representations from data. Unlike many traditional machine learning methods, deep learning can extract features directly from raw inputs, reducing the need for manual feature generation.
+</details>
+<details>
+<summary>
+<strong>What makes deep learning deep?</strong>
+</summary>
+Deep neural networks are considered <em>deep</em> because they contain multiple layers of neurons through which data are successively transformed. Each layer learns increasingly abstract features, from simple edges or shapes to complex patterns and structures. The depth, or number of layers, enables these models to capture highly non-linear relationships that simpler models cannot represent.
+</details>
+<details>
+<summary>
+<strong>What are some advantages and disadvantages of deep learning?</strong>
+</summary>
+Deep learning excels at learning complex patterns, handling high-dimensional data, and achieving state-of-the-art performance in tasks like image classification, segmentation, and 3D analysis. However, it typically requires large amounts of labelled data, substantial computational resources, and careful tuning. Deep neural networks can also be harder to interpret, making it challenging to understand why a model makes certain predictions.
+</details>
+<details>
+<summary>
+<strong>When should a deep neural networks be used?</strong>
+</summary>
+<p>Deep learning is most effective when you have large, diverse datasets and tasks with complex patterns that simpler models struggle to capture. As the complexity of the data or the task increases, deep learning becomes a more beneficial option. Raw lidar data, for example, is a complex dataset and is well suited for deep learning tasks.</p>
+<div id="fig-deeplearning-complexity" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-deeplearning-complexity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/dlcomplexity.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:40.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-deeplearning-complexity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16: Data and Task Complexity for Deep and Machine Learning
+</figcaption>
+</figure>
+</div>
+</details>
+<details>
+<summary>
+<strong>What computing resources are required to run a deep neural network?</strong>
+</summary>
+Training deep neural networks generally benefits from using a GPU, which accelerates the large matrix operations involved. Smaller models or inference tasks can run on a standard CPU, but training deep neural networks on CPUs is typically slow. For larger datasets or 3D models, access to GPUs, high memory capacity, and efficient data pipelines becomes increasingly important.
+</details>
+<details>
+<summary>
+<strong>Why do deep neural networks need so much data?</strong>
+</summary>
+Deep neural networks contain millions of parameters that must be learned during training. Large datasets help ensure these parameters capture general patterns rather than memorizing noise. With limited data, models are more likely to overfit. More data, especially diverse data, improves generalization.
+</details>
+<details>
+<summary>
+<strong>How do I know which model architecture to choose?</strong>
+</summary>
+The choice of architecture depends on the type of data, the goal, and the task. CNNs are well suited for image-based tasks, while point-based neural networks handle 3D point clouds. Architectures like U-Net are often used for segmentation, whereas regression problems might consider feedforward networks. A practical approach is to start with commonly used architectures and adapt them based on performance.
+</details>
+<details>
+<summary>
+<strong>How long does it take to train a deep neural network?</strong>
+</summary>
+Training time varies depending on model size, computing resources, and batch configuration. Small models may train in minutes to hours, while large models or 3D networks trained on high-resolution data can take days. Efficient hardware, optimized data loading, and appropriate batch sizes can significantly reduce training time.
+</details>
+<details>
+<summary>
+<strong>How do I know if I have enough labelled data?</strong>
+</summary>
+A practical way to assess this is by observing model performance and generalization. Signs you may not have enough labelled data include overfitting, unstable validation performance, or high sensitivity to small changes in the training set. If performance does not improve despite tuning, acquiring more labelled samples or using techniques like data augmentation, transfer learning, or pseudo-sample generation can help compensate for limited data.
+</details>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/Brent-Murray\.github\.io\/DeepLearningEFI\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Brent-Murray/DeepLearningEFI/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

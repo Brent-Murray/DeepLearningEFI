@@ -7,10 +7,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Brent Murray">
-<meta name="author" content="Alec Kvarnstrom">
+<meta name="author" content="Harry Seely">
+<meta name="author" content="Yuwei Cao">
+<meta name="author" content="Ahmed Ragab">
 <meta name="author" content="Nicholas Coops">
 
-<title>Multi-Scale Biomass Mapping and Timber Assessment in the Yukon Territory</title>
+<title>Deep Learning with Airborne Laser Scanning Data for Forest Inventories – Deep Learning for Forest Inventories</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +35,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./images/logos/irss.png" rel="icon" type="image/png">
+<link href="./images/TreeNetwork.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -85,11 +87,11 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./images/logos/irss.png" alt="" class="navbar-logo light-content">
-    <img src="./images/logos/irss.png" alt="" class="navbar-logo dark-content">
+    <img src="./images/TreeNetwork.png" alt="" class="navbar-logo light-content">
+    <img src="./images/TreeNetwork.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Multi-Scale Biomass Mapping and Timber Assessment in the Yukon Territory</span>
+    <span class="navbar-title">Deep Learning for Forest Inventories</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -103,8 +105,24 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./01_plot_generation.html"> 
-<span class="menu-text">Plots</span></a>
+    <a class="nav-link" href="./01_intro.html"> 
+<span class="menu-text">1-Intro</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./02_data.html"> 
+<span class="menu-text">2-Data</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./03_train.html"> 
+<span class="menu-text">3-Train</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./04_evaluation.html"> 
+<span class="menu-text">4-Evaluation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./05_examples.html"> 
+<span class="menu-text">5-Examples</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -122,35 +140,28 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
-  <li><a href="#project-work-packages" id="toc-project-work-packages" class="nav-link" data-scroll-target="#project-work-packages">Project work packages</a>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a>
   <ul class="collapse">
-  <li><a href="#postdoctoral-research-multiscale-forest-biomass-and-inventory-assessment" id="toc-postdoctoral-research-multiscale-forest-biomass-and-inventory-assessment" class="nav-link" data-scroll-target="#postdoctoral-research-multiscale-forest-biomass-and-inventory-assessment">Postdoctoral Research: Multiscale Forest Biomass and Inventory Assessment</a></li>
-  <li><a href="#phd-research-multi-platform-lidar-quantification-of-post-fire-slash-biomass-and-integration-into-carbon-accounting-and-wildfire-risk-systems-in-yukon-boreal-forests" id="toc-phd-research-multi-platform-lidar-quantification-of-post-fire-slash-biomass-and-integration-into-carbon-accounting-and-wildfire-risk-systems-in-yukon-boreal-forests" class="nav-link" data-scroll-target="#phd-research-multi-platform-lidar-quantification-of-post-fire-slash-biomass-and-integration-into-carbon-accounting-and-wildfire-risk-systems-in-yukon-boreal-forests">PhD Research: Multi-Platform LiDAR Quantification of Post-Fire Slash Biomass and Integration into Carbon Accounting and Wildfire Risk Systems in Yukon Boreal Forests</a></li>
+  <li><a href="#you-will-learn" id="toc-you-will-learn" class="nav-link" data-scroll-target="#you-will-learn">You will learn</a></li>
   </ul></li>
-  <li><a href="#tutorials-and-examples" id="toc-tutorials-and-examples" class="nav-link" data-scroll-target="#tutorials-and-examples">Tutorials and examples</a>
-  <ul class="collapse">
-  <li><a href="#tutorials-biomass" id="toc-tutorials-biomass" class="nav-link" data-scroll-target="#tutorials-biomass">Biomass mapping and modelling</a></li>
-  <li><a href="#tutorials-efi" id="toc-tutorials-efi" class="nav-link" data-scroll-target="#tutorials-efi">LiDAR processing and enhanced forest inventory</a></li>
-  <li><a href="#tutorials-postfire" id="toc-tutorials-postfire" class="nav-link" data-scroll-target="#tutorials-postfire">Post-fire drone data processing</a></li>
-  <li><a href="#tutorials-slash" id="toc-tutorials-slash" class="nav-link" data-scroll-target="#tutorials-slash">Slash pile biomass and multi-platform LiDAR</a></li>
-  </ul></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a></li>
+  <li><a href="#instructors" id="toc-instructors" class="nav-link" data-scroll-target="#instructors">Instructors</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/Brent-Murray/yukon-processing/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/Brent-Murray/DeepLearningEFI/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content column-page-left" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Multi-Scale Biomass Mapping and Timber Assessment in the Yukon Territory</h1>
-<p class="subtitle lead">Project Resources and Tutorials</p>
+<h1 class="title">Deep Learning with Airborne Laser Scanning Data for Forest Inventories</h1>
+<p class="subtitle lead">Tutorial</p>
 </div>
 
 
 <div class="quarto-title-meta-author column-page-left">
   <div class="quarto-title-meta-heading">Authors</div>
-  <div class="quarto-title-meta-heading">Affiliation</div>
+  <div class="quarto-title-meta-heading">Affiliations</div>
   
     <div class="quarto-title-meta-contents">
     <p class="author">Brent Murray </p>
@@ -161,11 +172,27 @@ ul.task-list li input[type="checkbox"] {
           </p>
       </div>
     <div class="quarto-title-meta-contents">
-    <p class="author">Alec Kvarnstrom </p>
+    <p class="author">Harry Seely </p>
   </div>
   <div class="quarto-title-meta-contents">
         <p class="affiliation">
             University of British Columbia – Integrated Remote Sensing Studio
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Yuwei Cao </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            University of British Columbia – Integrated Remote Sensing Studio
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Ahmed Ragab </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Natural Resources Canada - CanmetENERGY;<br>Polytechnique Montreal - Department of Mathematics and Industrial Engineering
           </p>
       </div>
     <div class="quarto-title-meta-contents">
@@ -190,73 +217,75 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div style="display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:60px; margin:30px 0;">
-<p><img src="images/logos/ubc.jpg" alt="University of British Columbia logo" style="height:70px; max-width:100%; object-fit:contain;"> <img src="images/logos/irss_text.png" alt="Integrated Remote Sensing Studio logo" style="height:70px; max-width:100%; object-fit:contain;"> <img src="images/logos/yukon.png" alt="Government of Yukon logo" style="height:70px; max-width:100%; object-fit:contain;"></p>
+<div style="display:flex; justify-content:center; align-items:center; gap:100px; margin:30px 0;">
+<p><img src="images/logos/nrcan.jpg" style="height:70px; margin-right:40px;"> <img src="images/logos/ubc.jpg" style="height:70px; margin-right:40px;"> <img src="images/logos/polymtl.png" style="height:70px;"></p>
 </div>
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>This website is a central resource for the <strong>Multi-Scale Biomass Mapping and Timber Assessment in the Yukon Territory</strong> project, undertaken in collaboration with the Yukon Government and the University of British Columbia’s Integrated Remote Sensing Studio. It provides tutorials for processing and analysing forest inventory and remote sensing data, alongside practical examples of methods and outputs developed through the project’s work packages.</p>
-<p>The project integrates field measurements, satellite imagery, environmental datasets, airborne LiDAR, and drone-based remote sensing to support forest biomass estimation, enhanced forest inventories, and post-fire assessment. The tutorials and examples are intended to document reproducible workflows and support their application to Yukon forest management and planning.</p>
-</section>
-<section id="project-work-packages" class="level2">
-<h2 class="anchored" data-anchor-id="project-work-packages">Project work packages</h2>
-<p>The project includes complementary postdoctoral and PhD research components.</p>
-<section id="postdoctoral-research-multiscale-forest-biomass-and-inventory-assessment" class="level3">
-<h3 class="anchored" data-anchor-id="postdoctoral-research-multiscale-forest-biomass-and-inventory-assessment">Postdoctoral Research: Multiscale Forest Biomass and Inventory Assessment</h3>
-<p>This research focuses on developing a multiscale remote sensing framework that integrates satellite imagery, airborne and drone-based LiDAR, and field observations to improve forest biomass estimation and inventory assessments across Yukon. Through three interconnected work packages, the project aims to provide reliable, spatially explicit information to support carbon accounting, wildfire planning, timber salvage, and sustainable forest management, while developing reproducible workflows for operational use. The work is organized into three work packages:</p>
-<section id="work-package-1-territory-wide-biomass-mapping" class="level4">
-<h4 class="anchored" data-anchor-id="work-package-1-territory-wide-biomass-mapping">Work Package 1: Territory-wide biomass mapping</h4>
-<p>Develop a territory-wide forest biomass map using field plot measurements, satellite imagery, topographic and climate information, and predictive modelling. Project resources will cover data preparation, biomass estimation, model validation, uncertainty assessment, and mapping.</p>
-</section>
-<section id="work-package-2-rapid-enhanced-forest-inventory" class="level4">
-<h4 class="anchored" data-anchor-id="work-package-2-rapid-enhanced-forest-inventory">Work Package 2: Rapid Enhanced Forest Inventory</h4>
-<p>Develop reproducible LiDAR-based workflows for generating forest inventory attributes at finer spatial scales, including approaches that can support assessment of fire-affected forests. Resources will include point-cloud processing, structural metric generation, inventory modelling, and example mapping outputs.</p>
-</section>
-<section id="work-package-3-post-fire-stand-inventory-and-assessment" class="level4">
-<h4 class="anchored" data-anchor-id="work-package-3-post-fire-stand-inventory-and-assessment">Work Package 3: Post-fire stand inventory and assessment</h4>
-<p>Evaluate drone-based LiDAR and imagery for characterizing post-fire forest conditions and supporting inventory and salvage planning. Examples will illustrate data acquisition and processing approaches, comparison with field measurements, and assessment of forest structural attributes.</p>
-</section>
-</section>
-<section id="phd-research-multi-platform-lidar-quantification-of-post-fire-slash-biomass-and-integration-into-carbon-accounting-and-wildfire-risk-systems-in-yukon-boreal-forests" class="level3">
-<h3 class="anchored" data-anchor-id="phd-research-multi-platform-lidar-quantification-of-post-fire-slash-biomass-and-integration-into-carbon-accounting-and-wildfire-risk-systems-in-yukon-boreal-forests">PhD Research: Multi-Platform LiDAR Quantification of Post-Fire Slash Biomass and Integration into Carbon Accounting and Wildfire Risk Systems in Yukon Boreal Forests</h3>
-<p>The PhD component focuses on quantifying slash pile biomass using multiple LiDAR platforms and integrating post-fire structural information into carbon accounting and wildfire risk assessment. The work is organized into two work packages:</p>
-<section id="work-package-1-multi-platform-data-acquisition-and-structural-assessment" class="level4">
-<h4 class="anchored" data-anchor-id="work-package-1-multi-platform-data-acquisition-and-structural-assessment">Work Package 1: Multi-Platform Data Acquisition and Structural Assessment</h4>
-<p>Establish representative fire- and harvest-affected study sites across Yukon to evaluate the use of drone LiDAR, airborne LiDAR, and photogrammetry for characterizing slash piles. Ground measurements and three-dimensional point cloud metrics will be used to assess pile structure, volume, and variability across different forest and environmental conditions.</p>
-</section>
-<section id="work-package-2-biomass-estimation-and-cross-platform-transferability" class="level4">
-<h4 class="anchored" data-anchor-id="work-package-2-biomass-estimation-and-cross-platform-transferability">Work Package 2: Biomass Estimation and Cross-Platform Transferability</h4>
-<p>Develop and evaluate statistical and machine learning models to estimate slash pile biomass from remotely sensed structural metrics. This work will assess model accuracy, uncertainty, and transferability across LiDAR platforms, with the goal of establishing reproducible workflows and operational guidelines for biomass estimation in Yukon forests.</p>
-</section>
-</section>
-</section>
-<section id="tutorials-and-examples" class="level2">
-<h2 class="anchored" data-anchor-id="tutorials-and-examples">Tutorials and examples</h2>
-<p>Tutorials and worked examples will be added as project workflows and datasets become available. The links below currently point to placeholder sections on this page; they can later be replaced with links to separate tutorial pages.</p>
+<p>This is an introductory workshop for deep learning techniques for Enhanced Forest Inventories (EFIs) presented at the Canadian Cross-Country EFI Checkup. This workshop covers a basic end-to-end deep learning workflow for EFI applications, covering an introduction into deep learning, to data preparation, and finally a demo of model training, evaluation, and deployment. There will also be some examples of real world forest inventory deep learning applications showcasing some of the possibilities there are with these techniques.</p>
+<section id="you-will-learn" class="level3">
+<h3 class="anchored" data-anchor-id="you-will-learn">You will learn</h3>
 <ul>
-<li><a href="#tutorials-biomass">Biomass mapping and modelling</a></li>
-<li><a href="#tutorials-efi">LiDAR processing and enhanced forest inventory</a></li>
-<li><a href="#tutorials-postfire">Post-fire drone data processing</a></li>
-<li><a href="#tutorials-slash">Slash pile biomass and multi-platform LiDAR</a></li>
+<li>What deep learning is and how it can be used for EFIs.</li>
+<li>How to prepare and read in data for use in deep learning.</li>
+<li>Basics of using the <a href="https://lightning.ai/docs/pytorch/stable/" target="_blank">PyTorch Lightning</a> deep learning library.</li>
+<li>Training a deep learning model for species classification and biomass prediction tasks.</li>
+<li>Testing and evaluating deep learning models.</li>
 </ul>
-<section id="tutorials-biomass" class="level3">
-<h3 class="anchored" data-anchor-id="tutorials-biomass">Biomass mapping and modelling</h3>
-<p><em>Tutorials coming soon:</em> predictor preparation, model training and validation, biomass mapping, and uncertainty assessment.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This site will remain open after the workshop for participants to review the content or share it with others. Because deep neural networks often require long training times, all datasets, training outputs, and model evaluations have been precomputed and are provided as part of this tutorial. We encourage you to follow along with the workshop to ask and return to the site at a later time to run the code/examples. If you have questions after the workshop or encounter any issues you can submit an issue via <a href="https://github.com/Brent-Murray/DeepLearningEFI/issues/new" target="_blank">GitHub</a>.</p>
+</div>
+</div>
 </section>
-<section id="tutorials-efi" class="level3">
-<h3 class="anchored" data-anchor-id="tutorials-efi">LiDAR processing and enhanced forest inventory</h3>
-<p><em>Tutorials coming soon:</em> point-cloud preparation, structural metrics, inventory modelling, and mapping.</p>
 </section>
-<section id="tutorials-postfire" class="level3">
-<h3 class="anchored" data-anchor-id="tutorials-postfire">Post-fire drone data processing</h3>
-<p><em>Tutorials coming soon:</em> drone LiDAR and imagery processing, post-fire structural attributes, and comparison with field observations.</p>
+<section id="setup" class="level2 hero">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<p>To get ready for this workshop follow the links below.</p>
+<p><a href="./setup.html" class="btn btn-primary">Get Started</a> <a href="./schedule.html" class="btn btn-outline-primary">View Schedule</a></p>
 </section>
-<section id="tutorials-slash" class="level3">
-<h3 class="anchored" data-anchor-id="tutorials-slash">Slash pile biomass and multi-platform LiDAR</h3>
-<p><em>Tutorials coming soon:</em> slash pile measurements, three-dimensional feature extraction, cross-platform comparison, and biomass estimation.</p>
+<section id="instructors" class="level2">
+<h2 class="anchored" data-anchor-id="instructors">Instructors</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Affiliation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://www.researchgate.net/profile/Brent-Murray-4" target="_blank">Brent Murray</a></td>
+<td>Integrated Remote Sensing Studio. University of British Columbia</td>
+</tr>
+<tr class="even">
+<td><a href="https://www.researchgate.net/profile/Harry-Seely" target="_blank">Harry Seely</a></td>
+<td>Integrated Remote Sensing Studio. University of British Columbia</td>
+</tr>
+<tr class="odd">
+<td><a href="https://www.researchgate.net/profile/Yuwei-Cao-2?ev=hdr_xprf" target="_blank">Yuwei Cao</a></td>
+<td>Integrated Remote Sensing Studio. University of British Columbia</td>
+</tr>
+<tr class="even">
+<td><a href="https://www.researchgate.net/profile/Ahmed-Ragab-17" target="_blank">Ahmed Ragab</a></td>
+<td>CanmetENERGY. Natural Resrouces Canada;<br>Department of Mathematics and Industrial Engineering. Polytechnique Montreal</td>
+</tr>
+</tbody>
+</table>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -665,4 +694,4 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Brent-Murray/yukon-processing/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Brent-Murray/DeepLearningEFI/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

@@ -1,0 +1,100 @@
+---
+title: "Compute LiDAR Metrics"
+format:
+  html:
+    toc: True
+execute:
+  echo: true
+---
+
+Set filepaths
+
+```{r}
+#| code-fold: true
+
+PLOT_LAS_DIR = "data/plot_las_files"
+
+LABELS_FPATH = "data/labels.csv"
+
+METRICS_CSV_OUT_FPATH <- "data/lidar_metrics.csv"
+
+RE_COMPUTE = FALSE
+
+```
+
+
+Load required R packages
+
+```{r}
+#| code-fold: true
+
+library(lidR)
+library(here)
+library(sf)
+library(tidyverse)
+library(purrr)
+library(lidRmetrics)
+library(Lmoments)
+
+```
+
+Load labels and plot point clouds
+
+```{r}
+#| code-fold: true
+
+labels_df <- read_csv(LABELS_FPATH)
+
+# Read all las files
+las_fpaths <- here(file.path(PLOT_LAS_DIR, paste0(labels_df$plot_id, ".las")))
+```
+
+Calculate LiDAR metrics using the lidR Metrics package
+
+[https://github.com/ptompalski/lidRmetrics](https://github.com/ptompalski/lidRmetrics)
+
+```{r}
+#| code-fold: true
+
+calc_metrics <- function(las) {
+
+  metrics <- lidRmetrics::metrics_set3(x = las@data$X, 
+                                       y = las@data$Y, 
+                                       z = las@data$Z, 
+                                       i = las@data$Intensity,
+                                       ReturnNumber = las@data$ReturnNumber,
+                                       NumberOfReturns = las@data$NumberOfReturns)
+  
+  metrics <- unlist(metrics)
+
+  metrics <- as.data.frame(t(metrics))
+
+  stopifnot(ncol(metrics) == 108)
+
+  if (!is.data.frame(metrics)) {
+    stop("The output is not a data frame.")
+  }
+
+  return(metrics)
+}
+
+if(RE_COMPUTE){
+
+  las_ls <- purrr::map(las_fpaths, readLAS, .progress = FALSE)
+
+  metrics_df_ls <- purrr::map(las_ls, calc_metrics, .progress = TRUE)
+
+  metrics_df <- dplyr::bind_rows(metrics_df_ls) %>%
+                      # Drop any columns with NAs
+                      dplyr::select(where(~!any(is.na(.))))
+
+  # Add plot ID
+  metrics_df$plot_id <- labels_df$plot_id
+
+  # Export
+  metrics_df %>% write_csv(METRICS_CSV_OUT_FPATH)
+
+  metrics_df %>% head(3)
+}
+
+```

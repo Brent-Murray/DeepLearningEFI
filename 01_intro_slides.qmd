@@ -1,0 +1,413 @@
+---
+title: "Introduction to Deep Learning"
+format:
+  revealjs:
+    include-in-header:
+      - text: |
+          <style>
+            /* DEFAULT: figures/images at bottom + centered */
+            .reveal section img {
+              display: block;
+              margin-left: auto;
+              margin-right: auto;
+              margin-top: 1rem;
+            }
+
+            /* Optional: keep Quarto/Pandoc figures centered too */
+            .reveal section figure {
+              margin-left: auto;
+              margin-right: auto;
+            }
+
+            /* LEFT/RIGHT LAYOUT ONLY WHEN YOU USE .lr */
+            .lr { display: flex; gap: 1.2rem; align-items: flex-start; }
+            .lr .left { flex: 1 1 55%; }
+            .lr .right { flex: 1 1 45%; }
+
+            /* override default centering rules inside lr so it doesn't push down */
+            .lr img {
+              margin: 0 !important;
+              width: 100%;
+              height: auto;
+              max-height: 520px;
+              object-fit: contain;
+            }
+          </style>
+
+    output-file: "01-intro-deep-learning-slides.html"
+    slide-number: true
+    navigation-mode: linear
+    transition: fade
+    center: true
+    theme: simple
+    width: 1280
+    height: 720
+    margin: 0.08
+    code-line-numbers: true
+    embed-resources: true
+
+---
+
+## Overview
+
+**Goal:** Provide an introduction to deep learning concepts and how they can be applied to enhanced forest inventories (EFIs)
+
+---
+
+## Overview
+**By the end of this section, you should be able to:**
+
+- Explain the role of AI in EFI modelling  
+- Distinguish AI, machine learning, and deep learning  
+- Describe the structure of a deep neural network  
+- Explain how models learn (loss, gradients, epochs)  
+- Compare image-based vs. point-based deep learning  
+- Use core deep learning terminology correctly  
+- Recognize common forestry-specific challenges  
+
+---
+
+## What Is Deep Learning?
+
+---
+
+## Artificial Intelligence → Machine Learning → Deep Learning
+
+::: {.lr}
+::: {.left}
+- **Artificial Intelligence (AI):** Systems that mimic human decision-making  
+- **Machine Learning (ML):** Models that improve through data-driven experience  
+- **Deep Learning (DL):** ML using neural networks with many hidden layers  
+
+:::
+
+::: {.right}
+![](images/aivendiagram.png)
+:::
+:::
+
+---
+
+## Deep Neural Networks: Key Concepts
+
+---
+
+## Neural Network Components
+
+- **Layers:** Input → hidden → output  
+- **Depth:** Number of layers  
+- **Width:** Number of neurons per layer
+
+![](images/neuralnet.png)
+
+---
+
+## Neural Network Components
+**Trade-offs:**
+
+- Increases in depth/width → increase representational power  
+- Increases in depth/width → increase computation, overfitting risk  
+
+![](images/neuralnet.png)
+
+---
+
+## The Neuron
+
+::: {.lr}
+:::{.left}
+- Fundamental unit of a neural network  
+- Computes a weighted sum of inputs plus a bias  
+
+$$
+\Large y = w_1x_1 + w_2x_2 + b
+$$
+
+- **Weights & biases** are learned during training  
+:::
+
+::: {.right}
+![](images/neuron.png)
+:::
+:::
+
+---
+
+## Activation Functions
+
+::: {.lr}
+::: {.left}
+- Applied to neuron output  
+- Introduce **non-linearity**
+- Enable learning of complex relationships  
+:::
+
+::: {.right}
+![](images/neuron.png)
+:::
+:::
+
+::: callout-note
+There are many types of activation functions, and you are encouraged to research which one would be best for your specific use case.
+:::
+
+---
+
+## How Do Neural Networks Learn?
+
+---
+
+## Prediction–Feedback Loop
+
+::: {.lr}
+::: {.left}
+The **prediction-feedback loop** is what makes **learning** possible as a deep neural network adapts to the patterns within the data and generalizes from them.
+
+:::
+
+::: {.right}
+![](images/feedbackloop.png)
+:::
+:::
+
+---
+
+## Goal: Loss, Gradients, and Epochs
+Learning is driven by the loss function which guides the adjustments of the weights/biases over a number of epochs.
+
+- **Loss function:** Measures prediction error  
+- **Gradients:** Sensitivity of loss to small changes in weights/bias  
+- **Epoch:** One full pass through the training data  
+
+![](images/epochs.gif)
+
+---
+
+## Common Deep Learning Tasks
+Learning is guided by defining what the task to be accomplished is.
+
+- **Classification**
+- **Regression**
+- **Segmentation**
+
+---
+
+## Task: Classification
+
+**Goal:** Assign inputs to discrete classes
+
+Forestry examples:
+
+- Tree species mapping  
+- Land cover classification  
+- Disturbance detection    
+
+![](images/classification.png){width=80%}
+
+---
+
+## Task: Regression
+
+**Goal:** Predict continuous values
+
+Forestry examples:
+
+- Above-ground biomass  
+- Canopy cover / LAI  
+- Tree height, crown size  
+
+![](images/regression.png){width=80%}
+
+---
+
+## Task: Segmentation
+
+**Goal:** Assign labels to every pixel or point
+
+Forestry examples:
+
+- Tree crown delineation  
+- Stand boundaries  
+- Structural mapping  
+
+![](images/segmentation.png){width=80%}
+
+---
+
+## Data: Training, Validation, Testing
+Learning happens through patterns identified in the data.
+
+- **Training:** Learn parameters  
+- **Validation:** Tune hyperparameters, prevent overfitting  
+- **Testing:** Final, unbiased performance estimate  
+
+::: callout-note
+Never mix training, validation, and testing data. Mixing or reusing data between these datasets can lead to misleading performance metrics and poor generalization.
+:::
+
+---
+
+## Image-Based vs. Point-Based Deep Learning
+
+Two dominant approaches in remote sensing:
+
+- Image-based methods  
+- Point-based methods  
+
+---
+
+## Image-Based Deep Learning
+
+- Operates on raster imagery  
+- Learns spatial patterns and textures  
+- Common inputs: RGB, multispectral, hyperspectral  
+
+![](images/imagedl.png){width=80%}
+
+---
+
+## Convolutional Neural Networks (CNNs)
+
+::: {.lr}
+::: {.left}
+- Core image-based architecture  
+- Use sliding filters (kernels)  
+- Detect edges → textures → objects  
+:::
+
+::: {.right}
+![](images/convolutions.png){width=60%}
+:::
+:::
+
+---
+
+## Point-Based Deep Learning
+
+- Operates directly on 3D point clouds  
+- No regular grid structure  
+- Learns from spatial relationships  
+
+![](images/pointdl.png){width=80%}
+
+---
+
+## Set Abstraction
+
+- Common point-based architecture
+- Group nearby points instead of grids
+- Learn local geometry → shapes → objects  
+
+![](images/setabstraction.png){width=80%}
+
+---
+
+## Core Terminology
+
+Establishing shared language before workflows and modeling.
+
+---
+
+## Parameters vs. Hyperparameters
+
+- **Parameters:** Learned values (weights, biases)  
+- **Hyperparameters:** User-defined settings  
+  - Learning rate  
+  - Batch size  
+  - Epochs  
+  - Model depth  
+
+---
+
+## Inputs, Labels, Learned Features
+
+- **Input features:** What the model sees  
+- **Labels:** What the model predicts  
+- **Learned features:** Internal representations  
+- **Logits:** Outputs of the final layer of a model
+
+---
+
+## Data Augmentation
+::: {.lr}
+::: {.left}
+- Artificially increases training diversity  
+- Improves robustness and generalization  
+- Especially useful with limited labels  
+:::
+
+::: {.right}
+![](images/augmentations.png){width=80%}
+:::
+:::
+
+---
+
+## Batches and Batch Size
+::: {.lr}
+::: {.left}
+- Data processed in small subsets (**batches**)  
+- **Batch size:** Samples per training step  
+:::
+
+::: {.right}
+![](images/batch.png){width=60%}
+:::
+:::
+
+---
+
+## Architecture vs. Weights
+
+- **Architecture:** Model/network structure (fixed)
+  - Number and type of layers
+  - How neurons/layers connect
+- **Weights:** Learned numerical values (changes)
+  - Updated during training
+  - Learned based on data
+
+---
+
+## Training Loop
+
+Repeated cycle until optimal point reached:
+
+1. Forward pass (predict)
+2. Loss computation (assess)
+3. Backward pass (feedback)
+4. Parameter update (adjust)
+
+![](images/backwardpass.png){width=60%}
+
+---
+
+## Transfer Learning and Fine-Tuning
+
+- **Transfer learning:** Start from pretrained model  
+- **Fine-tuning:** Adapt weights to your domain  
+
+Common in forestry due to limited labeled data.
+
+---
+
+## Deep Learning in Forestry: Challenges
+
+Forestry data introduce domain-specific constraints.
+
+---
+
+## Key Challenges and Considerations
+
+| Challenge | Impact | Common Solutions |
+|----------------|----------------|----------------|
+| Sensor & site variability | Poor generalization | Fine-tuning, domain adaptation |
+| Spatial autocorrelation | Inflated accuracy | Spatial CV, sampling strategies |
+| Class imbalance | Bias toward majority classes | Class weighting, loss design |
+| Synthetic benchmarks | Limited real-world transfer | Domain adaptation |
+| Limited labels | Reduced robustness | Augmentation, transfer learning |
+
+---
+
+::: callout-important
+**Human expertise** is essential in AI-derived forest inventories because models **do not define objectives, meaning, or validity** on their own. **Forestry knowledge** is required to **select appropriate data, define training and modelling approaches, and interpret outputs/results** ensuring they are scientifically sound, enabling deep learning to serve as a powerful tool for informed forest management decision-making.
+:::

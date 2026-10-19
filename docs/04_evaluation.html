@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Evaluation of Deep Learning Derived Forest Inventory Predictions – Deep Learning for Forest Inventories</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./images/TreeNetwork.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-acb86da7cc94e534617b9af23b514896.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/TreeNetwork.png" alt="" class="navbar-logo light-content">
+    <img src="./images/TreeNetwork.png" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Deep Learning for Forest Inventories</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./01_intro.html"> 
+<span class="menu-text">1-Intro</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./02_data.html"> 
+<span class="menu-text">2-Data</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./03_train.html"> 
+<span class="menu-text">3-Train</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./04_evaluation.html" aria-current="page"> 
+<span class="menu-text">4-Evaluation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./05_examples.html"> 
+<span class="menu-text">5-Examples</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#evaluating-deep-learning-predictions" id="toc-evaluating-deep-learning-predictions" class="nav-link" data-scroll-target="#evaluating-deep-learning-predictions">Evaluating Deep Learning Predictions</a></li>
+  <li><a href="#key-evaluation-metrics" id="toc-key-evaluation-metrics" class="nav-link" data-scroll-target="#key-evaluation-metrics">Key Evaluation Metrics</a>
+  <ul class="collapse">
+  <li><a href="#classification-metrics" id="toc-classification-metrics" class="nav-link" data-scroll-target="#classification-metrics">Classification metrics</a></li>
+  <li><a href="#regression-metrics" id="toc-regression-metrics" class="nav-link" data-scroll-target="#regression-metrics">Regression metrics</a></li>
+  </ul></li>
+  <li><a href="#prediction-results-and-visualization" id="toc-prediction-results-and-visualization" class="nav-link" data-scroll-target="#prediction-results-and-visualization">Prediction Results and Visualization</a></li>
+  <li><a href="#tree-species-classification" id="toc-tree-species-classification" class="nav-link" data-scroll-target="#tree-species-classification">Tree Species Classification</a>
+  <ul class="collapse">
+  <li><a href="#load-libraries" id="toc-load-libraries" class="nav-link" data-scroll-target="#load-libraries">Load libraries</a></li>
+  <li><a href="#load-predictions" id="toc-load-predictions" class="nav-link" data-scroll-target="#load-predictions">Load predictions</a></li>
+  <li><a href="#calculate-overall-classification-metrics" id="toc-calculate-overall-classification-metrics" class="nav-link" data-scroll-target="#calculate-overall-classification-metrics">Calculate overall classification metrics</a></li>
+  <li><a href="#calculate-class-specific-metrics" id="toc-calculate-class-specific-metrics" class="nav-link" data-scroll-target="#calculate-class-specific-metrics">Calculate class specific metrics</a></li>
+  <li><a href="#visualize-difficult-cases" id="toc-visualize-difficult-cases" class="nav-link" data-scroll-target="#visualize-difficult-cases">Visualize difficult cases</a></li>
+  </ul></li>
+  <li><a href="#forest-aboveground-biomass-regression" id="toc-forest-aboveground-biomass-regression" class="nav-link" data-scroll-target="#forest-aboveground-biomass-regression">Forest Aboveground Biomass Regression</a>
+  <ul class="collapse">
+  <li><a href="#improving-dnn-performance" id="toc-improving-dnn-performance" class="nav-link" data-scroll-target="#improving-dnn-performance">Improving DNN performance</a></li>
+  </ul></li>
+  <li><a href="#compare-results-to-random-forest-using-lidar-metrics" id="toc-compare-results-to-random-forest-using-lidar-metrics" class="nav-link" data-scroll-target="#compare-results-to-random-forest-using-lidar-metrics">Compare results to Random Forest using LiDAR Metrics</a>
+  <ul class="collapse">
+  <li><a href="#comparison-for-tree-species-classification" id="toc-comparison-for-tree-species-classification" class="nav-link" data-scroll-target="#comparison-for-tree-species-classification">Comparison for tree species classification</a></li>
+  <li><a href="#comparison-for-agb-regression" id="toc-comparison-for-agb-regression" class="nav-link" data-scroll-target="#comparison-for-agb-regression">Comparison for AGB regression</a></li>
+  <li><a href="#other-deep-neural-networks" id="toc-other-deep-neural-networks" class="nav-link" data-scroll-target="#other-deep-neural-networks">Other deep neural networks</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/Brent-Murray/DeepLearningEFI/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Evaluation of Deep Learning Derived Forest Inventory Predictions</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-left">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>This section describes how to evaluate trained deep learning models using an independent test dataset. It focuses on interpreting results from the final test run performed with the optimal network configuration after convergence. The evaluation procedures are demonstrated through our two case studies: tree species classification and biomass regression.</p>
+</section>
+<section id="evaluating-deep-learning-predictions" class="level2">
+<h2 class="anchored" data-anchor-id="evaluating-deep-learning-predictions">Evaluating Deep Learning Predictions</h2>
+<p>Evaluation goes beyond just logging the final loss. It requires inspecting the raw outputs and ensuring they make sense in the context of the problem.</p>
+<p>Prediction vs.&nbsp;Target: The core of evaluation is comparing the model’s output (raw logits or predicted values) against the ground truth. This is handled within the <code>on_test_epoch_end</code> hook, where raw predictions are aggregated.</p>
+<p>Post-processing: For classification, raw logits must be converted to class indices (e.g., using <code>np.argmax(all_pred, axis=1)</code>) before calculating metrics like accuracy or confusion matrices.</p>
+</section>
+<section id="key-evaluation-metrics" class="level2">
+<h2 class="anchored" data-anchor-id="key-evaluation-metrics">Key Evaluation Metrics</h2>
+<p>The choice of metric depends entirely on the task type, as implemented in your <code>on_test_epoch_end</code> hook:</p>
+<section id="classification-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="classification-metrics">Classification metrics</h3>
+<p>Instance Accuracy: The proportion of correctly classified individual samples (points or objects).</p>
+<p>Class Accuracy (Mean Class Accuracy): The average accuracy across all possible classes. This is vital for imbalanced datasets, as it prevents the model from being judged solely by its performance on the most frequent class.</p>
+<p><span class="math display">\[\text{Class Acc} = \frac{1}{N_{c}} \sum_{c=1}^{N_{c}} \frac{\text{True Positives}_c}{\text{Total Samples}_c}\]</span></p>
+<p>Confusion Matrix: A table that visualizes the performance of the classification model, where each row represents the instances in an actual class, and each column represents the instances in a predicted class.</p>
+</section>
+<section id="regression-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="regression-metrics">Regression metrics</h3>
+<p>Root Mean Squared Error (RMSE): Measures the average magnitude of the errors. Since the errors are squared before being averaged, RMSE gives a relatively high weight to large errors.</p>
+<p><span class="math display">\[\text{RMSE} = \sqrt{\frac{1}{N} \sum_{i=1}^{N} (y_i - \hat{y}_i)^2}\]</span></p>
+<p>R-squared (<span class="math inline">\(R^2\)</span>): Represents the proportion of the variance for a dependent variable that’s explained by the independent variable(s) in a regression model. <span class="math inline">\(R^2\)</span> ranges from <span class="math inline">\(0\)</span> to <span class="math inline">\(1\)</span>, with <span class="math inline">\(1\)</span> being a perfect fit.</p>
+</section>
+</section>
+<section id="prediction-results-and-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="prediction-results-and-visualization">Prediction Results and Visualization</h2>
+<p>Visualizing the results is often more informative than numerical logs alone.</p>
+<p>Qualitative Visualization: For point cloud applications, visualize the point cloud data colored by the model’s predicted label versus the true label to identify spatial regions where the model struggles.</p>
+<blockquote class="blockquote">
+<p>The generated predictions are also uploaded to GitHub:</p>
+<p><a href="./src/pretrained_ckpt/peta_cls_dgcnn_bs16_lre4/checkpoints/predictions.csv">Classification</a></p>
+<p><a href="./src/pretrained_ckpt/peta_reg_dgcnn_bs8_lre3/checkpoints/predictions.csv">Regression</a></p>
+</blockquote>
+</section>
+<section id="tree-species-classification" class="level2">
+<h2 class="anchored" data-anchor-id="tree-species-classification">Tree Species Classification</h2>
+<p>First we need to load in our libraries and our predictions that we generated at the end of the train section.</p>
+<section id="load-libraries" class="level3">
+<h3 class="anchored" data-anchor-id="load-libraries">Load libraries</h3>
+<p>Metrics can be calculated from libraries such as scikit-learn. <code>sklearn.metrics</code> provides common predefined functions that we can use to evaluate our predictions from our examples.</p>
+<div id="7f069f0d" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> (</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    accuracy_score,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    balanced_accuracy_score,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    cohen_kappa_score,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    f1_score,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    classification_report,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    confusion_matrix,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    mean_squared_error, </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    r2_score</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyvista <span class="im">as</span> pv</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyvista <span class="im">as</span> pv</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.utils.regression_utils <span class="im">import</span> plot_regression, convert_from_z_score</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="load-predictions" class="level3">
+<h3 class="anchored" data-anchor-id="load-predictions">Load predictions</h3>
+<p>We then can load in our predictions of our test dataset which we load in as a dataframe with true and predicted observations.</p>
+<div id="f34302a6" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>CLASS_MAP <span class="op">=</span> {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>: <span class="st">"conif"</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>: <span class="st">"decid"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>: <span class="st">"mixed"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">## Load Predictions</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>test_df <span class="op">=</span> pd.read_csv(<span class="vs">r"src/pretrained_ckpt/peta_cls_dgcnn_bs16_lre4/checkpoints/predictions</span><span class="dv">.</span><span class="vs">csv"</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>y_true <span class="op">=</span> test_df[<span class="st">"dom_sp_type"</span>]</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> test_df[<span class="st">"pred_dom_sp_type"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="calculate-overall-classification-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="calculate-overall-classification-metrics">Calculate overall classification metrics</h3>
+<p>For classification, we often calculate multiple accuracy metrics such as <strong>overall accuracy, Cohen’s kappa, and F1-score</strong>. Providing multiple metrics allows a more comprehensive assessment of model performance, as each metric captures different aspects of classification quality, particularly in the presence of class imbalance or unequal error costs.</p>
+<div id="09d2a966" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- Summary metrics ----</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>summary_data <span class="op">=</span> {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Metric"</span>: [</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Overall Accuracy"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Balanced Accuracy"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Cohen's Kappa"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Macro F1-score"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Weighted F1-score"</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Value"</span>: [</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        accuracy_score(y_true, y_pred),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        balanced_accuracy_score(y_true, y_pred),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        cohen_kappa_score(y_true, y_pred),</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        f1_score(y_true, y_pred, average<span class="op">=</span><span class="st">"macro"</span>),</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        f1_score(y_true, y_pred, average<span class="op">=</span><span class="st">"weighted"</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- per-species metrics ----</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>report <span class="op">=</span> classification_report(</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    y_true,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    y_pred,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    target_names<span class="op">=</span>[CLASS_MAP[i] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">sorted</span>(CLASS_MAP)],</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    output_dict<span class="op">=</span><span class="va">True</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>per_class_df <span class="op">=</span> (</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    pd.DataFrame(report)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    .T</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    .loc[<span class="bu">list</span>(CLASS_MAP.values())]</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    .reset_index()</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    .rename(columns<span class="op">=</span>{</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">"index"</span>: <span class="st">"Class"</span>,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">"precision"</span>: <span class="st">"Precision"</span>,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">"recall"</span>: <span class="st">"Recall"</span>,</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">"f1-score"</span>: <span class="st">"F1-score"</span>,</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>        <span class="st">"support"</span>: <span class="st">"Support"</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell" data-tbl-colwidths="[30,20]" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>summary_df <span class="op">=</span> pd.DataFrame(summary_data)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>summary_df[<span class="st">"Value"</span>] <span class="op">=</span> summary_df[<span class="st">"Value"</span>].<span class="bu">map</span>(<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>summary_df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-cls-metrics" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[30,20]" data-execution_count="5">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cls-metrics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Tree species classification performance on the test dataset.
+</figcaption>
+<div aria-describedby="tbl-cls-metrics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Metric</th>
+<th data-quarto-table-cell-role="th">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Overall Accuracy</td>
+<td>0.919</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Balanced Accuracy</td>
+<td>0.928</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Cohen's Kappa</td>
+<td>0.870</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Macro F1-score</td>
+<td>0.918</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Weighted F1-score</td>
+<td>0.919</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="calculate-class-specific-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="calculate-class-specific-metrics">Calculate class specific metrics</h3>
+<p>Per-class metrics such as <strong>precision and recall</strong> provide insight into how well individual classes are identified, highlighting class-specific errors that may be obscured by aggregate accuracy measures. <strong>Confusion matrices</strong> further support this analysis by explicitly showing the distribution of correct and incorrect predictions across classes, enabling a detailed interpretation of misclassification patterns.</p>
+<div class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> [<span class="st">"Precision"</span>, <span class="st">"Recall"</span>, <span class="st">"F1-score"</span>]:</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    per_class_df[col] <span class="op">=</span> per_class_df[col].<span class="bu">map</span>(<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>per_class_df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-cls-perclass" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="6">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cls-perclass-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Per-class precision, recall, and F1-score for tree species classification.
+</figcaption>
+<div aria-describedby="tbl-cls-perclass-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Class</th>
+<th data-quarto-table-cell-role="th">Precision</th>
+<th data-quarto-table-cell-role="th">Recall</th>
+<th data-quarto-table-cell-role="th">F1-score</th>
+<th data-quarto-table-cell-role="th">Support</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>conif</td>
+<td>0.944</td>
+<td>0.895</td>
+<td>0.919</td>
+<td>19.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>decid</td>
+<td>0.900</td>
+<td>1.000</td>
+<td>0.947</td>
+<td>9.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>mixed</td>
+<td>0.889</td>
+<td>0.889</td>
+<td>0.889</td>
+<td>9.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div id="cell-fig-cls-confmat" class="cell" data-fig-height="5" data-fig-width="6" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print confusion matrix</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>conf_matrix <span class="op">=</span> confusion_matrix(y_true, y_pred)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">5</span>), layout<span class="op">=</span><span class="st">'tight'</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>sns.heatmap(ax<span class="op">=</span>ax, data<span class="op">=</span>conf_matrix, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">'d'</span>, cmap<span class="op">=</span><span class="st">'Blues'</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>            xticklabels<span class="op">=</span>CLASS_MAP.values(),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>            yticklabels<span class="op">=</span>CLASS_MAP.values())</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Predicted Label'</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Observed Label'</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'DGCNN'</span>, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Export figure</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">"images/dnn_cls_confusion_matrix.jpg"</span>, dpi<span class="op">=</span><span class="dv">300</span>)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-cls-confmat" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cls-confmat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04_evaluation_files/figure-html/fig-cls-confmat-output-1.png" width="536" height="470" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cls-confmat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Confusion matrix for tree species classification.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="visualize-difficult-cases" class="level3">
+<h3 class="anchored" data-anchor-id="visualize-difficult-cases">Visualize difficult cases</h3>
+<p>It is often beneficial to visualize individual examples to better understand model predictions. The figure below shows point cloud samples from the testing set, including correctly classified cases (top row) and misclassified cases (bottom row). Such visualizations help identify where errors occur and, when combined with domain knowledge, provide insight into potential causes of misclassification</p>
+<div id="aa45ae2d" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># helper functions</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> visualize_z_grid(correct_df, wrong_df, pc_dir, save_path<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    plotter <span class="op">=</span> pv.Plotter(shape<span class="op">=</span>(<span class="dv">2</span>,<span class="dv">3</span>), window_size<span class="op">=</span>(<span class="dv">1800</span>,<span class="dv">1360</span>))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    plotter.link_views()</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    plotter.enable_eye_dome_lighting()</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    rows <span class="op">=</span> [(<span class="st">"CORRECT"</span>, correct_df), (<span class="st">"WRONG"</span>, wrong_df)]</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> row_idx, (_, row_df) <span class="kw">in</span> <span class="bu">enumerate</span>(rows):</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> col_idx, (_, r) <span class="kw">in</span> <span class="bu">enumerate</span>(row_df.iterrows()):</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>            plotter.subplot(row_idx, col_idx)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>            pid <span class="op">=</span> r.plot_id</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> pid <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>                <span class="cf">continue</span>  <span class="co"># empty subplot</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>            obs <span class="op">=</span> CLASS_MAP[<span class="bu">int</span>(r.dom_sp_type)]</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>            pred <span class="op">=</span> CLASS_MAP[<span class="bu">int</span>(r.pred_dom_sp_type)]</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>            pts <span class="op">=</span> np.load(pc_dir <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>pid<span class="sc">}</span><span class="ss">.npy"</span>)[:, :<span class="dv">3</span>]</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>            cloud <span class="op">=</span> pv.PolyData(pts)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>            cloud[<span class="st">"Z"</span>] <span class="op">=</span> pts[:, <span class="dv">2</span>]</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>            plotter.add_points(</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>                cloud,</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>                scalars<span class="op">=</span><span class="st">"Z"</span>,</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>                cmap<span class="op">=</span><span class="st">"viridis"</span>,</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>                point_size<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>                render_points_as_spheres<span class="op">=</span><span class="va">True</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>            plotter.add_text(</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>                <span class="ss">f"</span><span class="sc">{</span>pid<span class="sc">}</span><span class="ch">\n</span><span class="ss">obs:</span><span class="sc">{</span>obs<span class="sc">}</span><span class="ss"> | Pred:</span><span class="sc">{</span>pred<span class="sc">}</span><span class="ss">"</span>,</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>                position<span class="op">=</span>(<span class="fl">0.02</span>,<span class="fl">0.9</span>),</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>                viewport<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>                font_size<span class="op">=</span><span class="dv">11</span>,</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>                color<span class="op">=</span><span class="st">"black"</span>,</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>                shadow<span class="op">=</span><span class="va">False</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> save_path:</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>        plotter.show(screenshot<span class="op">=</span>save_path)</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>        plotter.show()</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sample_grid(df, n_per_row<span class="op">=</span><span class="dv">3</span>, seed<span class="op">=</span><span class="dv">42</span>):</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.copy()</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">"correct"</span>] <span class="op">=</span> df.dom_sp_type <span class="op">==</span> df.pred_dom_sp_type</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>    correct <span class="op">=</span> df[df.correct].sample(</span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>        <span class="bu">min</span>(n_per_row, <span class="bu">len</span>(df[df.correct])),</span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span>seed</span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>    wrong <span class="op">=</span> df[<span class="op">~</span>df.correct].sample(</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>        <span class="bu">min</span>(n_per_row, <span class="bu">len</span>(df[<span class="op">~</span>df.correct])),</span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span>seed</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> correct, wrong</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="af9bbfc1" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Folder with point clouds</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>pc_dir <span class="op">=</span> Path(<span class="st">"data/petawawa/plot_point_clouds"</span>)  <span class="co"># contains prf003.npy, etc</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>test_df[<span class="st">"correct"</span>] <span class="op">=</span> test_df.dom_sp_type <span class="op">==</span> test_df.pred_dom_sp_type</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Correct:"</span>, test_df.correct.<span class="bu">sum</span>())</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Incorrect:"</span>, (<span class="op">~</span>test_df.correct).<span class="bu">sum</span>())</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>correct_df, wrong_df <span class="op">=</span> sample_grid(test_df, n_per_row<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>visualize_z_grid(correct_df, wrong_df, pc_dir, save_path<span class="op">=</span><span class="st">"images/04_eval/cls_output.png"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Correct: 34
+Incorrect: 3</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04_evaluation_files/figure-html/cell-9-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="forest-aboveground-biomass-regression" class="level2">
+<h2 class="anchored" data-anchor-id="forest-aboveground-biomass-regression">Forest Aboveground Biomass Regression</h2>
+<p>Forest aboveground biomass (AGB) regression is a more complex modeling task compared to classifying dominant tree species.</p>
+<p>We begin by evaluating the DGCNN model trained with hyperparameters that achieved the best validation performance.</p>
+<p><strong>The code below includes a function for loading regression predictions and converting them from Z-score to the original scale.</strong></p>
+<div id="3d6e5003" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a funmction to read </span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_reg_pred(obs_pred_fpath, labels_df, mean_agb, sd_agb):</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Read predictions and make plot ID uppercase</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> (pd.read_csv(obs_pred_fpath)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                .assign(plot_id<span class="op">=</span><span class="kw">lambda</span> df: df[<span class="st">'plot_id'</span>].<span class="bu">str</span>.upper()))</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Drop Z-scored AGB labels from dataframes</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    df.pop(<span class="st">'total_agb_z'</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert predicted Z-scores back to original AGB values (tonnes per hectare)</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'agb_mg_ha_pred'</span>] <span class="op">=</span> convert_from_z_score(z_vals<span class="op">=</span>df[<span class="st">'total_agb_z_pred'</span>],</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>                                                sd<span class="op">=</span>sd_agb,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>                                                mean<span class="op">=</span>mean_agb)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.merge(labels_df, on<span class="op">=</span><span class="st">'plot_id'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p><strong>Load observed and predicted AGB values.</strong></p>
+<p>Previously, we generated predictions using the trained model on the test dataset, which are stored in the <code>predictions.csv</code> file within the model checkpoint directory (<code>src/pretrained_ckpt/...</code>).</p>
+<p>We also need to load the observed AGB values from <code>labels.csv</code>.</p>
+<p><strong>Below we generate an observed vs.&nbsp;predicted scatterplot including regression metrics for DGCNN.</strong></p>
+<p>We can see that the model fit was quite poor.</p>
+<div id="9bd642d2" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>LABELS_FPATH <span class="op">=</span> <span class="vs">r'data/petawawa/labels</span><span class="dv">.</span><span class="vs">csv'</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>dgcnn_pred_fpath <span class="op">=</span> <span class="vs">r'src/pretrained_ckpt/peta_reg_dgcnn_bs8_lre3/checkpoints/predictions</span><span class="dv">.</span><span class="vs">csv'</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Read labels</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>labels_df <span class="op">=</span> (pd.read_csv(LABELS_FPATH)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>             .assign(plot_id<span class="op">=</span><span class="kw">lambda</span> df: df[<span class="st">'plot_id'</span>].<span class="bu">str</span>.upper())</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>             .rename(columns<span class="op">=</span>{<span class="st">'total_agb_mg_ha'</span>: <span class="st">'agb_mg_ha_obs'</span>}))</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Set mean and standard deviation for Z-score conversion</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>mean_agb <span class="op">=</span> labels_df[<span class="st">'agb_mg_ha_obs'</span>].mean()</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>sd_agb <span class="op">=</span> labels_df[<span class="st">'agb_mg_ha_obs'</span>].std()</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Load DGCNN predictions</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>dgcnn_obs_pred_df <span class="op">=</span> load_reg_pred(dgcnn_pred_fpath, labels_df, mean_agb, sd_agb)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot regression results</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>plot_regression(obs<span class="op">=</span>dgcnn_obs_pred_df[<span class="st">'agb_mg_ha_obs'</span>], </span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>                pred<span class="op">=</span>dgcnn_obs_pred_df[<span class="st">'agb_mg_ha_pred'</span>],</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>                ax_lims<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">400</span>),</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>                title<span class="op">=</span><span class="st">'DGCNN'</span>,</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>                fig_out_fpath<span class="op">=</span><span class="st">'images/dgcnn_regression_plot.jpg'</span>,</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>                hide<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04_evaluation_files/figure-html/cell-11-output-1.png" width="472" height="469" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="improving-dnn-performance" class="level3">
+<h3 class="anchored" data-anchor-id="improving-dnn-performance">Improving DNN performance</h3>
+<p>Deep neural networks (DNNs) often have poor model fit when trained out-of-the-box on small datasets. Recall that most prominent DNNs are typically trained using millions of samples.</p>
+<p>In situations like the Petawawa dataset, with only n = 249 samples, there are a few steps that can be taken to achieve improved performance.</p>
+<p><strong>Trying a different DNN architecture</strong></p>
+<p>First, we can try a different DNN architecture that may be better suited to forest AGB regression. Some research has indicated that 3-D CNNs perform better for AGB estimation. For example, <a href="https://doi.org/10.1016/j.rse.2023.113968">Oehmcke et al.&nbsp;(2024)</a> found that the Minkowski Engine sparse 3-D CNN outperformed point-based DNNs such as PointNet and KPConv for AGB regression.</p>
+<p>Following this logic, we will evaluate the effectiveness of a similar <a href="https://github.com/octree-nn/ocnn-pytorch">Octree-CNN (OCNN)</a> model that was implemented by <a href="https://doi.org/10.1016/j.srs.2023.100110">Seely et al.&nbsp;(2023)</a>.</p>
+<p><strong>Below we evaluate the performance of OCNN on the PRF dataset.</strong></p>
+<div id="0bd64566" class="cell" data-execution_count="12">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load OCNN predictions</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>ocnn_pred_fpath <span class="op">=</span> <span class="vs">r'src/pretrained_ckpt/peta_reg_ocnn_bs16_lre3_ckpt_no_ckpt/checkpoints/predictions</span><span class="dv">.</span><span class="vs">csv'</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>ocnn_obs_pred_df <span class="op">=</span> load_reg_pred(ocnn_pred_fpath, labels_df, mean_agb, sd_agb)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>plot_regression(obs<span class="op">=</span>ocnn_obs_pred_df[<span class="st">'agb_mg_ha_obs'</span>], </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                pred<span class="op">=</span>ocnn_obs_pred_df[<span class="st">'agb_mg_ha_pred'</span>],</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                ax_lims<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">400</span>),</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                title<span class="op">=</span><span class="st">'OCNN'</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                fig_out_fpath<span class="op">=</span><span class="st">'images/ocnn_regression_plot.jpg'</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>                hide<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04_evaluation_files/figure-html/cell-12-output-1.png" width="472" height="469" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can see that OCNN achieved a better fit compared to DGCNN, reducing RMSE and bias and improving <span class="math inline">\(R^2\)</span>.</p>
+<p><strong>Transfer learning</strong></p>
+<p>We can take this a step further and apply <a href="https://d2l.ai/chapter_computer-vision/fine-tuning.html">transfer learning (TL)</a> to train OCNN.</p>
+<p>Conventionally, DNN model weights are randomly initialized, which means the model begins training with no prior knowledge. TL involves initializing the model weights using a pre-trained OCNN model that was trained on a similar, larger dataset.</p>
+<p>In this case, we will use a version of OCNN that was pretrained on the New Brunswick forest inventory dataset from <a href="https://doi.org/10.1016/j.srs.2023.100110">Seely et al.&nbsp;(2023)</a>. This pretrained model checkpoint is stored at <code>src/pretrained_ckpt/ocnn_nbk_idXM6D.ckpt</code>.</p>
+<p><strong>Below we evaluate the transfer learning OCNN (OCNN-TL) performance on the PRF dataset.</strong></p>
+<p>We can see that transfer learning further improved the model fit.</p>
+<div id="d8db4f18" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Different model checkpoints</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>ocnn_tl_pred_fpath <span class="op">=</span> <span class="vs">r'src/pretrained_ckpt/peta_reg_ocnn_bs16_lre4_ckpt_ocnn_nbk_idXM6D/checkpoints/predictions</span><span class="dv">.</span><span class="vs">csv'</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>ocnn_tl_obs_pred_df <span class="op">=</span> load_reg_pred(ocnn_tl_pred_fpath, labels_df, mean_agb, sd_agb)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>plot_regression(obs<span class="op">=</span>ocnn_tl_obs_pred_df[<span class="st">'agb_mg_ha_obs'</span>], </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                pred<span class="op">=</span>ocnn_tl_obs_pred_df[<span class="st">'agb_mg_ha_pred'</span>],</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                ax_lims<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">400</span>),</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>                title<span class="op">=</span><span class="st">'OCNN-TL'</span>,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>                fig_out_fpath<span class="op">=</span><span class="st">'images/ocnn_tl_regression_plot.jpg'</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>                hide<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04_evaluation_files/figure-html/cell-13-output-1.png" width="472" height="469" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+<p>Building on the poor DGCNN performance, we explored two methods of improving DNN model performance for AGB estimation:</p>
+<ol type="1">
+<li>Using a different DNN architecture (OCNN)</li>
+<li>Applying transfer learning (OCNN-TL)</li>
+</ol>
+<p><strong>Other strategies to boost DNN performance</strong></p>
+<p>Due to the high degree of flexibility in DNN architectures and training strategies, there are many other potential avenues for improving model performance that can be explored. These include, but are not limited to:</p>
+<ul>
+<li>Hyperparameter tuning</li>
+<li>Data augmentation</li>
+<li>Ensemble modelling</li>
+</ul>
+<p><strong><a href="https://doi.org/10.1016/j.jag.2023.103569">Safonova et al.&nbsp;2023</a></strong> provides additional strategies for improving DNN performance for remote sensing applications in scenarios with small datasets which are shown in the figure below.</p>
+<div id="fig-small-data-flowchart" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-small-data-flowchart-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/small_data_dl_flowchart.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-small-data-flowchart-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Flowchart from Safonova et al.&nbsp;(2023)
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="compare-results-to-random-forest-using-lidar-metrics" class="level1">
+<h1>Compare results to Random Forest using LiDAR Metrics</h1>
+<p>While it is useful to compare the performance of different deep neural networks, it is also important to benchmark DNN results against conventional machine learning approaches for EFI that rely on LiDAR metrics. The most common approach is to use Random Forest (RF) models trained using plot-level LiDAR height metrics as predictors.</p>
+<p><a href="./random_forest.html">View the RF training workflow and results here</a></p>
+<p><strong>Below we compare the best DNN results to RF results for both tree species classification and AGB regression.</strong></p>
+<p>Overall, we can see that the DNN models implemented in this tutorial provided a modest improvement compared to RF models trained using LiDAR metrics. It is possible that this improvement could have been further increased with additional DNN hyperparameter tuning and training strategies.</p>
+<p>It is important to note the computational cost of training DNNs and the complexity of the code and overall workflow compared to RF. In some cases, the improvement in performance may not justify the added complexity of DNNs compared to RF for EFI applications.</p>
+<section id="comparison-for-tree-species-classification" class="level3">
+<h3 class="anchored" data-anchor-id="comparison-for-tree-species-classification">Comparison for tree species classification</h3>
+<div style="display: flex; justify-content: center; gap: 20px;">
+<p><img src="images/dnn_cls_confusion_matrix.jpg" alt="Image 1" style="width: 45%; min-width: 200px;"> <img src="images/rf_cls_confusion_matrix.jpg" alt="Image 2" style="width: 45%; min-width: 200px;"></p>
+</div>
+</section>
+<section id="comparison-for-agb-regression" class="level3">
+<h3 class="anchored" data-anchor-id="comparison-for-agb-regression">Comparison for AGB regression</h3>
+<div style="display: flex; justify-content: center; gap: 20px;">
+<p><img src="images/ocnn_tl_regression_plot.jpg" alt="Image 1" style="width: 45%; min-width: 200px;"> <img src="images/rf_regression_plot.jpg" alt="Image 2" style="width: 45%; min-width: 200px;"></p>
+</div>
+</section>
+<section id="other-deep-neural-networks" class="level2">
+<h2 class="anchored" data-anchor-id="other-deep-neural-networks">Other deep neural networks</h2>
+<iframe src="https://api.wandb.ai/links/ubc-yuwei-cao/q2oxsdbc" style="border:none;height:600px;width:100%" loading="lazy">
+</iframe>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/Brent-Murray\.github\.io\/DeepLearningEFI\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Brent-Murray/DeepLearningEFI/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
